@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — RCP</title>
+  <meta name="description" content="Sign in to your Research Collaboration Platform account." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+    }
+    .auth-left {
+      flex: 1;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1040 50%, #0a1628 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 3rem;
+    }
+    .auth-left .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+    }
+    .auth-left .orb1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,70,229,0.4) 0%, transparent 70%);
+      top: -100px; left: -150px;
+    }
+    .auth-left .orb2 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(6,182,212,0.3) 0%, transparent 70%);
+      bottom: -50px; right: -100px;
+    }
+    .auth-left-content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 440px;
+    }
+    .auth-left-logo { margin-bottom: 3rem; }
+    .auth-left-logo a {
+      display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none;
+    }
+    .auth-left-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .auth-left p { color: #94a3b8; font-size: 1rem; line-height: 1.7; margin-bottom: 2.5rem; }
+    .auth-feature-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .auth-feature {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.9rem; color: #94a3b8;
+    }
+    .auth-feature-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .auth-right {
+      width: 480px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+    }
+    .auth-form-container { width: 100%; max-width: 380px; }
+    .auth-form-header { margin-bottom: 2rem; }
+    .auth-form-header h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+    .auth-form-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+    .role-select-pills {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.25rem;
+    }
+    .role-pill {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: calc(var(--radius-md) - 2px);
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .role-pill.active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .input-group-custom {
+      position: relative;
+    }
+    .input-group-custom .input-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .input-group-custom input {
+      padding-left: 2.5rem !important;
+    }
+    .input-group-custom .toggle-pass {
+      position: absolute;
+      right: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      z-index: 1;
+    }
+    .input-group-custom .toggle-pass:hover { color: var(--text-primary); }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .checkbox-custom {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.875rem; color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .checkbox-custom input { accent-color: var(--primary); cursor: pointer; }
+    .forgot-link {
+      font-size: 0.875rem;
+      color: var(--primary-light);
+      transition: color 0.2s;
+    }
+    .forgot-link:hover { color: #fff; }
+
+    .auth-footer-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .auth-footer-link a { color: var(--primary-light); font-weight: 600; }
+
+    .error-msg {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #f87171;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .error-msg.show { display: flex; }
+
+    @media (max-width: 900px) {
+      .auth-left { display: none; }
+      .auth-right { width: 100%; border-left: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="auth-page">
+  <!-- Left Panel -->
+  <div class="auth-left">
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="auth-left-content">
+      <div class="auth-left-logo">
+        <a href="index.html">
+          <div style="width:44px;height:44px;background:linear-gradient(135deg,#4f46e5,#06b6d4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;flex-shrink:0;">
+            <i class="bi bi-diagram-3-fill"></i>
+          </div>
+          <div style="margin-left:0.75rem;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.2rem;color:#f1f5f9;">RCP</div>
+            <div style="font-size:0.65rem;color:#64748b;letter-spacing:0.08em;">RESEARCH PLATFORM</div>
+          </div>
+        </a>
+      </div>
+      <div class="auth-left-tagline">
+        Welcome back,<br /><span class="gradient-text">Academic Collaborator.</span>
+      </div>
+      <p>Sign in with your role credentials to access your personalized research dashboard.</p>
+      <div class="auth-feature-list">
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(79,70,229,0.15);color:#818cf8;"><i class="bi bi-mortarboard-fill"></i></div>
+          Student Researcher Dashboard & Tasks
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(245,158,11,0.15);color:#fbbf24;"><i class="bi bi-shield-lock-fill"></i></div>
+          Faculty Supervisor Reviews & Approval Queue
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" style="background:rgba(16,185,129,0.15);color:#34d399;"><i class="bi bi-gear-fill"></i></div>
+          Admin Monitoring & Content Moderation
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="auth-right">
+    <div class="auth-form-container animate-fade">
+      <div class="auth-form-header">
+        <h1>Sign In</h1>
+        <p>Select your user role to access your dashboard</p>
+      </div>
+
+      <div class="error-msg" id="loginError">
+        <i class="bi bi-exclamation-circle"></i>
+        <span id="loginErrorMsg">Invalid credentials. Please try again.</span>
+      </div>
+
+      <!-- Role Selector Pills -->
+      <div class="role-select-pills">
+        <div class="role-pill active" data-role="STUDENT" onclick="selectLoginRole('STUDENT')">🎓 Student</div>
+        <div class="role-pill" data-role="SUPERVISOR" onclick="selectLoginRole('SUPERVISOR')">🧑‍🏫 Supervisor</div>
+        <div class="role-pill" data-role="ADMIN" onclick="selectLoginRole('ADMIN')">⚙️ Admin</div>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <div class="input-group-custom">
+            <i class="bi bi-envelope input-icon"></i>
+            <input type="email" id="loginEmail" class="form-control-custom"
+              value="rafi@cse.buet.ac.bd" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div class="input-group-custom">
+            <i class="bi bi-lock input-icon"></i>
+            <input type="password" id="loginPassword" class="form-control-custom"
+              value="password123" autocomplete="current-password" required />
+            <i class="bi bi-eye toggle-pass" id="togglePass"></i>
+          </div>
+        </div>
+
+        <div class="remember-row">
+          <label class="checkbox-custom">
+            <input type="checkbox" id="rememberMe" checked /> Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary-custom w-full" id="loginBtn"
+          style="justify-content:center;padding:0.85rem;font-size:0.95rem;border-radius:var(--radius-md);">
+          <span id="loginBtnText"><i class="bi bi-box-arrow-in-right"></i> Sign In to Dashboard</span>
+          <span id="loginBtnSpinner" style="display:none;">
+            <i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;"></i> Signing in...
+          </span>
+        </button>
+      </form>
+
+      <div class="auth-footer-link">
+        Don't have an account? <a href="register.html">Create one free</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  let selectedRole = 'STUDENT';
+
+  function selectLoginRole(role) {
+    selectedRole = role;
+    document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.role-pill[data-role="${role}"]`).classList.add('active');
+
+    const emailInput = document.getElementById('loginEmail');
+    if (role === 'SUPERVISOR') {
+      emailInput.value = 'karim.hassan@buet.ac.bd';
+    } else if (role === 'ADMIN') {
+      emailInput.value = 'admin@rcp.edu';
+    } else {
+      emailInput.value = 'rafi@cse.buet.ac.bd';
+    }
+  }
+
+  // Toggle password visibility
+  document.getElementById('togglePass').addEventListener('click', function () {
+    const input = document.getElementById('loginPassword');
+    const isPass = input.type === 'password';
+    input.type = isPass ? 'text' : 'password';
+    this.classList.toggle('bi-eye', !isPass);
+    this.classList.toggle('bi-eye-slash', isPass);
+  });
+
+  // Form submission
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btnText = document.getElementById('loginBtnText');
+    const btnSpinner = document.getElementById('loginBtnSpinner');
+
+    if (!email || !password) {
+      const errEl = document.getElementById('loginError');
+      const errMsg = document.getElementById('loginErrorMsg');
+      if (errEl) errEl.style.display = 'flex';
+      if (errMsg) errMsg.textContent = 'Please enter your email and password.';
+      return;
+    }
+
+    if (btnText) btnText.style.display = 'none';
+    if (btnSpinner) btnSpinner.style.display = 'inline-flex';
+
+    // Pass only email + password — backend returns the correct role from DB
+    await handleLoginRedirect(email, password);
+  });
+</script>
+</body>
+</html>

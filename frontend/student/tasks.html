@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Tasks — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+  <style>
+    .kanban-card {
+      cursor: grab;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .kanban-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    .kanban-card.dragging {
+      opacity: 0.4;
+      cursor: grabbing;
+    }
+    .kanban-column.drag-over {
+      background: rgba(99, 102, 241, 0.08) !important;
+      border: 2px dashed var(--primary) !important;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="bi bi-diagram-3-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Research Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">WORKSPACE</div>
+      <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item"><i class="bi bi-folder2-open"></i> My Projects</a>
+      <a href="tasks.html" class="nav-item active"><i class="bi bi-kanban"></i> My Tasks</a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="researchers.html" class="nav-item"><i class="bi bi-people"></i> Researchers</a>
+      <a href="discussions.html" class="nav-item"><i class="bi bi-chat-square-dots"></i> Discussions</a>
+      <a href="files.html" class="nav-item"><i class="bi bi-cloud-arrow-up"></i> Files</a>
+      <a href="chat.html" class="nav-item"><i class="bi bi-chat-dots-fill"></i> Chat</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item"><i class="bi bi-bell"></i> Notifications</a>
+      <a href="profile.html" class="nav-item"><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini">US</div>
+        <div><div style="font-size:0.85rem;font-weight:600;" id="sbUserName">Researcher</div><div style="font-size:0.72rem;color:var(--text-muted);">Student</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <a href="dashboard.html" style="color:var(--text-muted);text-decoration:none;">Workspace</a>
+        <span>/</span>
+        <span style="color:var(--text-primary);font-weight:600;">Project Task Board</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade" style="margin-bottom:1.25rem;">
+        <div>
+          <h1 style="font-size:1.6rem;font-weight:800;display:flex;align-items:center;gap:0.5rem;">
+            <i class="bi bi-kanban" style="color:var(--primary-light)"></i> Project Task Kanban Board
+          </h1>
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.25rem;">
+            Tasks belong exclusively to collaborative project groups. Assigned members view and move deliverables through completion.
+          </p>
+        </div>
+      </div>
+
+      <!-- Filter & Action Bar -->
+      <div class="rcp-card mb-3" style="padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.85rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;flex:1 1 450px;">
+          <div style="min-width:210px;flex:1;">
+            <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.2rem;">FILTER PROJECT</label>
+            <select id="filterProjectDropdown" class="form-control-custom" onchange="filterKanbanBoard()" style="font-size:0.85rem;padding:0.45rem 0.75rem;">
+              <option value="ALL">All My Projects</option>
+            </select>
+          </div>
+          <div style="min-width:160px;flex:1;">
+            <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.2rem;">FILTER ASSIGNEE</label>
+            <select id="filterAssigneeDropdown" class="form-control-custom" onchange="filterKanbanBoard()" style="font-size:0.85rem;padding:0.45rem 0.75rem;">
+              <option value="ALL">All Assignees</option>
+              <option value="ME">Assigned to Me</option>
+            </select>
+          </div>
+          <div style="min-width:180px;flex:1.5;">
+            <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.2rem;">SEARCH TASKS</label>
+            <input type="text" id="filterSearchInput" class="form-control-custom" placeholder="Search by title or description..." oninput="filterKanbanBoard()" style="font-size:0.85rem;padding:0.45rem 0.75rem;" />
+          </div>
+        </div>
+        <div>
+          <button class="btn-primary-custom" type="button" onclick="openCreateTaskModal()" style="font-size:0.88rem;padding:0.55rem 1.25rem;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 4px 12px rgba(99,102,241,0.35);">
+            <i class="bi bi-plus-lg"></i> Create Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Kanban Board (4 Columns) -->
+      <div class="kanban-board" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1rem;">
+        
+        <!-- Column 1: TODO -->
+        <div class="kanban-column" data-status="TODO" ondragover="allowDrop(event)" onmouseleave="dragLeave(event)" ondrop="dropTask(event)">
+          <div class="kanban-column-header" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:0.75rem;border-bottom:2px solid var(--primary-light);">
+            <span style="font-weight:700;font-size:0.92rem;"><i class="bi bi-list-task" style="color:var(--primary-light);"></i> TO DO</span>
+            <span class="badge-custom badge-todo" id="badge-count-TODO">0</span>
+          </div>
+          <div class="kanban-items" id="col-TODO" ondragover="allowDrop(event)" ondrop="dropTask(event)" style="display:flex;flex-direction:column;gap:0.75rem;min-height:300px;padding:0.5rem 0;">
+            <div style="text-align:center;padding:2.5rem;color:var(--text-muted);font-size:0.85rem;">Loading tasks...</div>
+          </div>
+        </div>
+
+        <!-- Column 2: IN PROGRESS -->
+        <div class="kanban-column" data-status="IN_PROGRESS" ondragover="allowDrop(event)" onmouseleave="dragLeave(event)" ondrop="dropTask(event)">
+          <div class="kanban-column-header" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:0.75rem;border-bottom:2px solid #3b82f6;">
+            <span style="font-weight:700;font-size:0.92rem;"><i class="bi bi-arrow-repeat" style="color:#3b82f6;"></i> IN PROGRESS</span>
+            <span class="badge-custom badge-inprogress" id="badge-count-IN_PROGRESS">0</span>
+          </div>
+          <div class="kanban-items" id="col-IN_PROGRESS" ondragover="allowDrop(event)" ondrop="dropTask(event)" style="display:flex;flex-direction:column;gap:0.75rem;min-height:300px;padding:0.5rem 0;">
+            <div style="text-align:center;padding:2.5rem;color:var(--text-muted);font-size:0.85rem;">No tasks</div>
+          </div>
+        </div>
+
+        <!-- Column 3: SUBMITTED FOR REVIEW -->
+        <div class="kanban-column" data-status="SUBMITTED_FOR_REVIEW" ondragover="allowDrop(event)" onmouseleave="dragLeave(event)" ondrop="dropTask(event)">
+          <div class="kanban-column-header" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:0.75rem;border-bottom:2px solid #f59e0b;">
+            <span style="font-weight:700;font-size:0.92rem;"><i class="bi bi-send-check" style="color:#f59e0b;"></i> SUBMITTED</span>
+            <span class="badge-custom badge-planning" style="background:#f59e0b;color:#fff;" id="badge-count-SUBMITTED_FOR_REVIEW">0</span>
+          </div>
+          <div class="kanban-items" id="col-SUBMITTED_FOR_REVIEW" ondragover="allowDrop(event)" ondrop="dropTask(event)" style="display:flex;flex-direction:column;gap:0.75rem;min-height:300px;padding:0.5rem 0;">
+            <div style="text-align:center;padding:2.5rem;color:var(--text-muted);font-size:0.85rem;">No tasks</div>
+          </div>
+        </div>
+
+        <!-- Column 4: COMPLETED -->
+        <div class="kanban-column" data-status="COMPLETED" ondragover="allowDrop(event)" onmouseleave="dragLeave(event)" ondrop="dropTask(event)">
+          <div class="kanban-column-header" style="display:flex;justify-content:space-between;align-items:center;padding-bottom:0.75rem;border-bottom:2px solid #10b981;">
+            <span style="font-weight:700;font-size:0.92rem;"><i class="bi bi-check-circle-fill" style="color:#10b981;"></i> COMPLETED</span>
+            <span class="badge-custom badge-done" id="badge-count-COMPLETED">0</span>
+          </div>
+          <div class="kanban-items" id="col-COMPLETED" ondragover="allowDrop(event)" ondrop="dropTask(event)" style="display:flex;flex-direction:column;gap:0.75rem;min-height:300px;padding:0.5rem 0;">
+            <div style="text-align:center;padding:2.5rem;color:var(--text-muted);font-size:0.85rem;">No tasks</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Create Task Modal -->
+<div class="modal-overlay" id="createTaskModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(5px);z-index:99999;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)hideModal('createTaskModal')">
+  <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-xl);width:100%;max-width:550px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,0.6);overflow:hidden;position:relative;">
+    
+    <!-- Modal Header (Fixed) -->
+    <div class="modal-header" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg-card);">
+      <h3 style="font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;margin:0;">
+        <i class="bi bi-plus-circle-fill" style="color:var(--primary-light);"></i> Create New Project Task
+      </h3>
+      <button class="btn-ghost" type="button" onclick="hideModal('createTaskModal')" style="padding:0.3rem 0.6rem;font-size:1.1rem;line-height:1;border-radius:var(--radius-md);" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Modal Form (Body Scrolls, Footer Fixed) -->
+    <form id="createTaskForm" onsubmit="handleCreateTaskSubmit(event)" style="display:flex;flex-direction:column;flex:1;overflow:hidden;margin:0;">
+      
+      <!-- Scrollable Form Fields -->
+      <div class="modal-body" style="padding:1.25rem 1.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;flex:1;">
+        
+        <div>
+          <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+            Research Project <span style="color:var(--danger);">*</span>
+          </label>
+          <select id="taskProjectSelect" class="form-control-custom" required onchange="onTaskProjectChange(this.value)" style="width:100%;">
+            <option value="">Select Research Project...</option>
+          </select>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;">
+            <i class="bi bi-info-circle"></i> Tasks are tied to this collaborative research project group.
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+            Task Title <span style="color:var(--danger);">*</span>
+          </label>
+          <input type="text" id="taskTitleInput" class="form-control-custom" placeholder="e.g. Dataset Cleaning & Feature Extraction" required style="width:100%;font-size:0.9rem;" />
+        </div>
+
+        <div>
+          <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+            Description & Deliverables
+          </label>
+          <textarea id="taskDescInput" class="form-control-custom" rows="3" placeholder="Outline specific tasks, required tools, benchmark criteria, or expected output..." style="width:100%;font-size:0.88rem;"></textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;">
+          <div>
+            <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+              Assign To <span style="color:var(--danger);">*</span>
+            </label>
+            <select id="taskAssigneeSelect" class="form-control-custom" required style="width:100%;">
+              <option value="">Select Project First...</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+              Priority Level
+            </label>
+            <select id="taskPrioritySelect" class="form-control-custom" style="width:100%;">
+              <option value="LOW">Low Priority</option>
+              <option value="MEDIUM" selected>Medium Priority</option>
+              <option value="HIGH">High Priority</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.85rem;font-weight:700;display:block;margin-bottom:0.35rem;color:var(--text-primary);">
+            Target Deadline
+          </label>
+          <input type="date" id="taskDeadlineInput" class="form-control-custom" style="width:100%;" />
+        </div>
+
+      </div>
+
+      <!-- Sticky Footer with SUBMIT BUTTON (Always Visible) -->
+      <div class="modal-footer" style="padding:1rem 1.5rem;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;align-items:center;gap:0.85rem;background:var(--bg-card);flex-shrink:0;">
+        <button type="button" class="btn-ghost" onclick="hideModal('createTaskModal')" style="padding:0.55rem 1.25rem;font-size:0.88rem;border:1px solid var(--border-color);">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary-custom" id="createTaskSubmitBtn" style="padding:0.6rem 1.6rem;font-weight:700;font-size:0.92rem;display:inline-flex;align-items:center;gap:0.45rem;background:var(--primary);color:#fff;border-radius:var(--radius-md);box-shadow:0 4px 14px rgba(99,102,241,0.4);cursor:pointer;">
+          <i class="bi bi-check2-circle" style="font-size:1.1rem;"></i> Create Task (Add to To Do)
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+<script src="../js/auth.js?v=3.0"></script>
+<script src="../js/api.js?v=3.0"></script>
+<script src="../js/tasks.js?v=3.0"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+</script>
+</body>
+</html>

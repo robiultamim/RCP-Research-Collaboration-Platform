@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Discussions — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="bi bi-diagram-3-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Research Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">WORKSPACE</div>
+      <a href="dashboard.html" class="nav-item "><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item "><i class="bi bi-folder2-open"></i> My Projects <span class="nav-badge">4</span></a>
+      <a href="tasks.html" class="nav-item "><i class="bi bi-kanban"></i> My Tasks <span class="nav-badge">7</span></a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers</a>
+      <a href="discussions.html" class="nav-item active"><i class="bi bi-chat-square-dots"></i> Discussions</a>
+      <a href="files.html" class="nav-item "><i class="bi bi-cloud-arrow-up"></i> Files</a>
+      <a href="chat.html" class="nav-item "><i class="bi bi-chat-dots-fill"></i> Chat <span class="nav-badge">5</span></a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item "><i class="bi bi-bell"></i> Notifications <span class="nav-badge" id="notifBadge">4</span></a>
+      <a href="profile.html" class="nav-item "><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini">AS</div>
+        <div><div style="font-size:0.85rem;font-weight:600;">Alex Student</div><div style="font-size:0.72rem;color:var(--text-muted);">Student Researcher</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Collaboration / Research Forum</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">AS</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade">
+        <div>
+          <h1><i class="bi bi-chat-square-dots-fill" style="color:var(--primary-light)"></i> Research Discussions & Q&A</h1>
+          <p>Collaborate with peers, ask research questions, and share benchmark insights</p>
+        </div>
+        <button class="btn-primary-custom" onclick="showModal('startDiscussionModal')"><i class="bi bi-plus-lg"></i> New Discussion Topic</button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar mb-3">
+        <div class="filter-search"><i class="bi bi-search"></i><input type="text" placeholder="Search discussion topics, tags..." id="searchDiscInput" /></div>
+        <select class="filter-select">
+          <option value="">All Research Areas</option>
+          <option>Artificial Intelligence</option><option>Cyber Security</option><option>NLP / LLMs</option>
+        </select>
+        <select class="filter-select">
+          <option value="">Sort By</option>
+          <option>Most Recent</option><option>Most Replies</option><option>Pinned</option>
+        </select>
+      </div>
+
+      <!-- Pinned Announcement Card -->
+      <div class="rcp-card mb-3 animate-fade" style="padding:1.5rem;border-left:4px solid var(--warning);background:rgba(245,158,11,0.06);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706)">DR</div>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;">[PINNED ANNOUNCEMENT] Evaluation Methodology Guidelines</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Posted by Dr. Rahman (Faculty Supervisor) · 2 days ago</div>
+            </div>
+          </div>
+          <span class="chip chip-amber"><i class="bi bi-pin-angle-fill"></i> Pinned</span>
+        </div>
+        <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.75rem;">
+          Please review the updated 5-fold cross validation split requirements before uploading final test set results. Check <code>Files</code> section for script templates.
+        </p>
+      </div>
+
+      <!-- Discussion Posts Stream -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem;" id="discussionStream">
+
+        <!-- Post 1 -->
+        <div class="rcp-card" style="padding:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <div class="avatar avatar-md">AS</div>
+              <div>
+                <div style="font-weight:700;font-size:1rem;">Which base model works best for Bangla LLM fine-tuning?</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);">Posted by Alex Student · 3 hours ago · <span class="chip chip-cyan" style="font-size:0.68rem;">Bangla NLP</span></div>
+              </div>
+            </div>
+            <span class="chip"><i class="bi bi-chat-dots"></i> 3 Replies</span>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">
+            We are evaluating LLaMA-3 8B vs Mistral 7B for our hallucination detection benchmark dataset. Has anyone benchmarked Bangla tokenization efficiency on Mistral?
+          </p>
+
+          <!-- Replies List -->
+          <div style="background:var(--bg-surface);border-radius:var(--radius-md);padding:1rem;display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1rem;" id="replies-post-1">
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#06b6d4,#0ea5e9)">TK</div>
+              <div style="font-size:0.85rem;">
+                <strong style="color:var(--text-primary);">Tamim Khan:</strong> LLaMA-3 8B tokenizer handles Bangla script with lower fertility rates in our initial tests!
+                <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;">2 hours ago</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inline Reply Box -->
+          <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="form-control-custom" placeholder="Write a reply..." id="replyInput-1" />
+            <button class="btn-primary-custom" onclick="postReply(1)"><i class="bi bi-send"></i> Reply</button>
+          </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="rcp-card" style="padding:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <div class="avatar avatar-md" style="background:linear-gradient(135deg,#06b6d4,#0ea5e9)">RN</div>
+              <div>
+                <div style="font-weight:700;font-size:1rem;">Zero-day dataset sources for Network Intrusion Detection</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);">Posted by Rani Noor · 1 day ago · <span class="chip chip-green" style="font-size:0.68rem;">Cyber Security</span></div>
+              </div>
+            </div>
+            <span class="chip"><i class="bi bi-chat-dots"></i> 1 Reply</span>
+          </div>
+
+          <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">
+            Looking for pre-processed PCAP files with annotated DDoS and zero-day payload signatures. Any recommended public academic repositories?
+          </p>
+
+          <div style="display:flex;gap:0.5rem;">
+            <input type="text" class="form-control-custom" placeholder="Write a reply..." id="replyInput-2" />
+            <button class="btn-primary-custom" onclick="postReply(2)"><i class="bi bi-send"></i> Reply</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal: Start New Discussion -->
+<div class="modal-overlay" id="startDiscussionModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 style="font-size:1.1rem;font-weight:700;"><i class="bi bi-plus-circle-fill" style="color:var(--primary-light)"></i> Start New Discussion Topic</h3>
+      <button class="btn-ghost" onclick="hideModal('startDiscussionModal')" style="padding:0.3rem;"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <form onsubmit="handleCreateDiscussion(event)">
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="form-group">
+          <label class="form-label">Discussion Title *</label>
+          <input type="text" id="discTitleInput" class="form-control-custom" placeholder="e.g. How to evaluate model perplexity on Bangla datasets?" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Research Area Tag *</label>
+          <select class="form-control-custom" id="discTagSelect">
+            <option value="Bangla NLP">Bangla NLP / LLMs</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Computer Vision">Computer Vision</option>
+            <option value="Machine Learning">Machine Learning</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Discussion Content *</label>
+          <textarea id="discBodyInput" class="form-control-custom" rows="4" placeholder="Detail your research question or discussion topic..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" onclick="hideModal('startDiscussionModal')">Cancel</button>
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Post Topic</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function postReply(postId) {
+    const input = document.getElementById('replyInput-' + postId);
+    const val = input.value.trim();
+    if (!val) return;
+
+    let container = document.getElementById('replies-post-' + postId);
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'replies-post-' + postId;
+      container.style.cssText = 'background:var(--bg-surface);border-radius:var(--radius-md);padding:1rem;display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1rem;';
+      input.parentElement.parentNode.insertBefore(container, input.parentElement);
+    }
+
+    const replyEl = document.createElement('div');
+    replyEl.style.cssText = 'display:flex;align-items:flex-start;gap:0.75rem;';
+    replyEl.innerHTML = `
+      <div class="avatar avatar-sm">AS</div>
+      <div style="font-size:0.85rem;">
+        <strong style="color:var(--text-primary);">Alex Student:</strong> ${val}
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;">Just now</div>
+      </div>
+    `;
+    container.appendChild(replyEl);
+    input.value = '';
+    showToast('Reply published to discussion thread!');
+  }
+
+  function handleCreateDiscussion(e) {
+    e.preventDefault();
+    const title = document.getElementById('discTitleInput').value.trim();
+    const tag = document.getElementById('discTagSelect').value;
+    const body = document.getElementById('discBodyInput').value.trim();
+
+    if (!title || !body) return;
+
+    const stream = document.getElementById('discussionStream');
+    const newCard = document.createElement('div');
+    newCard.className = 'rcp-card animate-fade';
+    newCard.style.padding = '1.5rem';
+    const pId = Date.now();
+    newCard.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="avatar avatar-md">AS</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;">${title}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">Posted by Alex Student · Just now · <span class="chip chip-cyan" style="font-size:0.68rem;">${tag}</span></div>
+          </div>
+        </div>
+        <span class="chip"><i class="bi bi-chat-dots"></i> 0 Replies</span>
+      </div>
+      <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">${body}</p>
+      <div style="display:flex;gap:0.5rem;">
+        <input type="text" class="form-control-custom" placeholder="Write a reply..." id="replyInput-${pId}" />
+        <button class="btn-primary-custom" onclick="postReply('${pId}')"><i class="bi bi-send"></i> Reply</button>
+      </div>
+    `;
+    stream.insertBefore(newCard, stream.firstChild);
+    showToast('Discussion topic published!');
+    hideModal('startDiscussionModal');
+  }
+</script>
+
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+  function showModal(id) { document.getElementById(id).classList.add('active'); }
+  function hideModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function showToast(msg) {
+    let toast = document.getElementById('discNotifToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'discNotifToast';
+      toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(16,185,129,0.95);color:#fff;padding:0.85rem 1.35rem;border-radius:10px;font-weight:600;font-size:0.875rem;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:99999;display:flex;align-items:center;gap:0.6rem;backdrop-filter:blur(8px);';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> ${msg}`;
+    toast.style.display = 'flex';
+    setTimeout(() => { toast.style.display = 'none'; }, 3500);
+  }
+</script>
+</body>
+</html>

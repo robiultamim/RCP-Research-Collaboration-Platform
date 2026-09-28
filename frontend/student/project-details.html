@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Details — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+  <style>
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .tab-btn {
+      padding: 0.55rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      background: var(--primary) !important;
+      color: #fff !important;
+      border-color: var(--primary) !important;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+    .member-mini-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1 1 240px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .member-mini-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="bi bi-diagram-3-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Research Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">WORKSPACE</div>
+      <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item active"><i class="bi bi-folder2-open"></i> My Projects</a>
+      <a href="tasks.html" class="nav-item"><i class="bi bi-kanban"></i> My Tasks</a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="researchers.html" class="nav-item"><i class="bi bi-people"></i> Researchers</a>
+      <a href="discussions.html" class="nav-item"><i class="bi bi-chat-square-dots"></i> Discussions</a>
+      <a href="files.html" class="nav-item"><i class="bi bi-cloud-arrow-up"></i> Files</a>
+      <a href="chat.html" class="nav-item"><i class="bi bi-chat-dots-fill"></i> Chat</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item"><i class="bi bi-bell"></i> Notifications</a>
+      <a href="profile.html" class="nav-item"><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini">US</div>
+        <div><div style="font-size:0.85rem;font-weight:600;" id="sbUserName">Researcher</div><div style="font-size:0.72rem;color:var(--text-muted);">Research Workspace</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <a href="projects.html" style="color:var(--text-muted);text-decoration:none;">Projects</a>
+        <span>/</span>
+        <span style="color:var(--text-primary);font-weight:600;">Project Details</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <!-- Project Hero -->
+      <div class="project-hero animate-fade" style="margin-bottom:1.5rem;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:1.75rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.25rem;">
+          <div style="flex:1 1 350px;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+              <span class="chip chip-cyan" id="pdArea" style="font-weight:600;">Research Domain</span>
+              <span class="badge-custom badge-active" id="pdStatus">ACTIVE</span>
+            </div>
+            <h1 style="font-size:1.65rem;font-weight:800;margin-bottom:0.5rem;line-height:1.3;" id="pdTitle">Loading Project Details...</h1>
+            <div style="display:flex;flex-wrap:wrap;gap:1.5rem;font-size:0.85rem;color:var(--text-muted);">
+              <span id="pdCapacityBadge"><i class="bi bi-people-fill" style="color:var(--primary-light);"></i> Team Capacity: Loading...</span>
+              <span id="pdDeadline"><i class="bi bi-calendar3"></i> Deadline: Loading...</span>
+            </div>
+          </div>
+          <div id="pdLeaveActionContainer" style="display:flex;align-items:center;gap:0.75rem;"></div>
+        </div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-nav mb-3" style="display:flex;gap:0.6rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;flex-wrap:wrap;">
+        <button type="button" class="tab-btn active" data-tab="overview" onclick="switchProjectTab('overview', this)">
+          <i class="bi bi-layout-text-sidebar"></i> Overview
+        </button>
+        <button type="button" class="tab-btn" data-tab="members" onclick="switchProjectTab('members', this)">
+          <i class="bi bi-people-fill"></i> Team Members (<span id="tabMemberCount">0</span>/6)
+        </button>
+        <button type="button" class="tab-btn" data-tab="discussion" onclick="switchProjectTab('discussion', this)">
+          <i class="bi bi-chat-square-dots-fill"></i> Team Discussions
+        </button>
+        <button type="button" class="tab-btn" data-tab="files" onclick="switchProjectTab('files', this)">
+          <i class="bi bi-cloud-upload-fill"></i> Project Files <span id="tabFileCount" style="background:var(--primary);color:#fff;font-size:0.72rem;border-radius:999px;padding:0.1rem 0.4rem;"></span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Overview -->
+      <div id="tab-overview" class="tab-content active">
+        <!-- Abstract -->
+        <div class="rcp-card" style="padding:1.75rem;margin-bottom:1.5rem;">
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.75rem;">
+            <i class="bi bi-journal-text" style="color:var(--primary-light);"></i> Research Abstract & Objectives
+          </h3>
+          <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.7;white-space:pre-line;" id="pdDescription">
+            Loading description...
+          </p>
+        </div>
+
+        <!-- Team Members Section on Overview -->
+        <div class="rcp-card" style="padding:1.75rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+            <div>
+              <h3 style="font-size:1.1rem;font-weight:700;margin:0;">
+                <i class="bi bi-people" style="color:var(--primary-light);"></i> Research Group Members (<span id="pdOverviewMemberCount">0</span>/6)
+              </h3>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0.25rem 0 0 0;">
+                Academic Collaboration Group · Max 6 members · 1 Supervisor
+              </p>
+            </div>
+            <button class="btn-ghost" type="button" onclick="switchProjectTab('members')" style="font-size:0.85rem;padding:0.4rem 0.85rem;">
+              View Full Team Roster <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+          <div id="pdOverviewMembersMini" style="display:flex;flex-wrap:wrap;gap:0.85rem;">
+            <span style="color:var(--text-muted);font-size:0.85rem;">Loading team members...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Members -->
+      <div id="tab-members" class="tab-content">
+        <div class="rcp-card" style="padding:1.5rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:0.25rem;">
+              <i class="bi bi-people-fill" style="color:var(--primary-light);"></i> Research Group Roster
+            </h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">
+              Academic constraint: Strictly maximum 6 members and 1 faculty supervisor per group.
+            </p>
+          </div>
+          <a href="researchers.html" class="btn-primary-custom" style="font-size:0.85rem;padding:0.5rem 1rem;display:inline-flex;align-items:center;gap:0.4rem;">
+            <i class="bi bi-person-plus"></i> Invite More Researchers
+          </a>
+        </div>
+        <div id="pdMembersList" style="display:flex;flex-direction:column;gap:0.85rem;">
+          <div style="text-align:center;padding:2.5rem;color:var(--text-muted);">Loading members...</div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Discussions -->
+      <div id="tab-discussion" class="tab-content">
+        <div class="rcp-card" style="padding:1.5rem;margin-bottom:1.25rem;">
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:0.75rem;">
+            <i class="bi bi-chat-left-dots" style="color:var(--primary-light);"></i> Start Project Discussion
+          </h3>
+          <form onsubmit="handleProjectDiscussionSubmit(event)">
+            <input type="text" id="pdDiscTitle" class="form-control-custom" placeholder="Discussion topic title..." style="margin-bottom:0.6rem;" required />
+            <textarea id="pdDiscContent" class="form-control-custom" rows="3" placeholder="Share findings, research questions, or meeting notes with group members..." style="margin-bottom:0.75rem;" required></textarea>
+            <button type="submit" class="btn-primary-custom" style="font-size:0.85rem;padding:0.45rem 1.25rem;display:inline-flex;align-items:center;gap:0.4rem;">
+              <i class="bi bi-send-fill"></i> Post Topic
+            </button>
+          </form>
+        </div>
+        <div id="pdDiscussionsList" style="display:flex;flex-direction:column;gap:0.85rem;">
+          <div style="text-align:center;padding:2.5rem;color:var(--text-muted);">Loading discussions...</div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Files -->
+      <div id="tab-files" class="tab-content">
+        <!-- Upload Card -->
+        <div class="rcp-card" style="padding:1.5rem;margin-bottom:1.25rem;">
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:0.75rem;">
+            <i class="bi bi-cloud-arrow-up" style="color:var(--primary-light);"></i> Upload Project File
+          </h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">
+            <i class="bi bi-shield-lock-fill" style="color:#10b981;"></i>
+            <strong>Members-only:</strong> Files are accessible exclusively to project group members. Max file size: 100MB.
+          </p>
+          <form id="pdFileUploadForm" onsubmit="handleProjectFileUpload(event)" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div id="pdDropZone" style="border:2px dashed var(--border-color);border-radius:var(--radius-md);padding:2rem;text-align:center;cursor:pointer;transition:border-color 0.2s;background:var(--bg-main);">
+              <i class="bi bi-cloud-upload" style="font-size:2.2rem;color:var(--text-muted);display:block;margin-bottom:0.5rem;"></i>
+              <p style="color:var(--text-secondary);margin:0 0 0.5rem 0;font-size:0.9rem;">Drag & drop a file here, or click to select</p>
+              <input type="file" id="pdFileInput" style="display:none;" required />
+              <button type="button" class="btn-ghost" style="font-size:0.85rem;padding:0.45rem 1rem;" onclick="document.getElementById('pdFileInput').click()">
+                <i class="bi bi-folder2-open"></i> Choose File
+              </button>
+              <div id="pdSelectedFileName" style="margin-top:0.5rem;font-size:0.82rem;color:var(--primary-light);font-weight:600;"></div>
+            </div>
+            <button type="submit" class="btn-primary-custom" id="pdUploadBtn" style="font-size:0.85rem;padding:0.5rem 1.25rem;display:inline-flex;align-items:center;gap:0.4rem;align-self:flex-start;">
+              <i class="bi bi-cloud-upload-fill"></i> Upload File
+            </button>
+          </form>
+          <!-- Upload Progress -->
+          <div id="pdUploadProgress" style="display:none;margin-top:1rem;">
+            <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.3rem;">Uploading...</div>
+            <div style="background:var(--border-color);border-radius:999px;height:6px;overflow:hidden;">
+              <div id="pdProgressBar" style="height:100%;width:0%;background:var(--primary);transition:width 0.4s;border-radius:999px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- File List Card -->
+        <div class="rcp-card" style="padding:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+            <h3 style="font-size:1.05rem;font-weight:700;margin:0;">
+              <i class="bi bi-files" style="color:var(--primary-light);"></i> Shared Project Files
+            </h3>
+            <span id="pdFilesCount" style="font-size:0.82rem;color:var(--text-muted);"></span>
+          </div>
+          <div id="pdFilesList" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="text-align:center;padding:2.5rem;color:var(--text-muted);">
+              <i class="bi bi-folder2-open" style="font-size:1.8rem;opacity:0.5;display:block;margin-bottom:0.5rem;"></i>
+              Loading project files...
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+
+  function switchProjectTab(tabName, clickedBtn) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-tab') === tabName) {
+        btn.classList.add('active');
+      }
+    });
+    if (clickedBtn && clickedBtn.classList) {
+      clickedBtn.classList.add('active');
+    }
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    const target = document.getElementById('tab-' + tabName);
+    if (target) {
+      target.classList.add('active');
+    }
+  }
+  window.switchProjectTab = switchProjectTab;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const tab = this.getAttribute('data-tab');
+        if (tab) switchProjectTab(tab, this);
+      });
+    });
+
+    // File input display filename on select
+    const fileInput = document.getElementById('pdFileInput');
+    const fileNameDisplay = document.getElementById('pdSelectedFileName');
+    if (fileInput && fileNameDisplay) {
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          fileNameDisplay.textContent = '📎 ' + fileInput.files[0].name + ' (' + (fileInput.files[0].size / 1024).toFixed(1) + ' KB)';
+        }
+      });
+    }
+
+    // Drag-and-drop support
+    const dropZone = document.getElementById('pdDropZone');
+    if (dropZone && fileInput) {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--primary)';
+        dropZone.style.background = 'rgba(99,102,241,0.05)';
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = 'var(--border-color)';
+        dropZone.style.background = 'var(--bg-main)';
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-color)';
+        dropZone.style.background = 'var(--bg-main)';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const dt = new DataTransfer();
+          dt.items.add(files[0]);
+          fileInput.files = dt.files;
+          if (fileNameDisplay) {
+            fileNameDisplay.textContent = '📎 ' + files[0].name + ' (' + (files[0].size / 1024).toFixed(1) + ' KB)';
+          }
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>

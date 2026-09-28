@@ -1,0 +1,56 @@
+# ─── Java / Maven Build Outputs ───────────────────────────
+target/
+*.jar
+*.war
+*.class
+*.original
+
+# ─── IDE Files ────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Logs ─────────────────────────────────────────────────
+*.log
+backend-startup.log
+backend-error.log
+
+# ─── Uploaded Files (user uploads, not source code) ───────
+uploads/
+
+# ─── Scratch / Dev Scripts (not needed in repo) ───────────
+scratch/
+
+# ─── RCP-DEPLOY (built artifacts folder, not source) ──────
+RCP-DEPLOY/
+
+# ─── Large / Binary Files ─────────────────────────────────
+*.zip
+*.pdf
+*.sql
+*.docx
+*.xlsx
+
+# ─── OS Files ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Python Cache ─────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+
+# ─── Spring Boot Application Properties (keep template, ignore local overrides) ──
+# Uncomment below if you have secrets in application.properties:
+# src/main/resources/application.properties
+
+# ─── Node (if any frontend tooling added later) ───────────
+node_modules/

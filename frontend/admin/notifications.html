@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Notifications — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#ef4444,#b91c1c);"><i class="bi bi-shield-lock-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Administration</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">OVERVIEW</div>
+      <a href="dashboard.html" class="nav-item "><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="reports.html" class="nav-item "><i class="bi bi-graph-up-arrow"></i> Reports & Analytics</a>
+
+      <div class="nav-section-title">USER MANAGEMENT</div>
+      <a href="users.html" class="nav-item "><i class="bi bi-person-badge"></i> Users Directory <span class="nav-badge">1248</span></a>
+      <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers Directory</a>
+
+      <div class="nav-section-title">PLATFORM</div>
+      <a href="projects.html" class="nav-item "><i class="bi bi-folder2-open"></i> Projects <span class="nav-badge">186</span></a>
+      <a href="tasks.html" class="nav-item "><i class="bi bi-kanban"></i> Tasks Monitoring</a>
+      <a href="discussions.html" class="nav-item "><i class="bi bi-flag-fill"></i> Discussions Moderation <span class="nav-badge" style="background:var(--danger)">2</span></a>
+      <a href="files.html" class="nav-item "><i class="bi bi-file-earmark-lock"></i> File Moderation</a>
+      <a href="chat.html" class="nav-item "><i class="bi bi-chat-left-dots"></i> Chat Diagnostics</a>
+
+      <div class="nav-section-title">SYSTEM</div>
+      <a href="notifications.html" class="nav-item active"><i class="bi bi-bell"></i> System Alerts <span class="nav-badge" style="background:var(--danger)" id="notifBadge">4</span></a>
+      <a href="settings.html" class="nav-item "><i class="bi bi-gear-fill"></i> Settings</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="profile.html" class="nav-item "><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">SA</div>
+        <div><div style="font-size:0.85rem;font-weight:600;">System Admin</div><div style="font-size:0.72rem;color:var(--text-muted);">Platform Administrator</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">System / Admin Notifications & Health Alerts</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#ef4444,#b91c1c);cursor:pointer;" onclick="window.location.href='profile.html'">SA</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade">
+        <div>
+          <h1><i class="bi bi-shield-bell-fill" style="color:var(--danger)"></i> System Health Alerts & Notifications</h1>
+          <p>Real-time server logs, moderation alerts, and automated backups</p>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:0.875rem;">
+        <div class="rcp-card" style="padding:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;border-left:4px solid var(--danger);">
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.15);color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+              <i class="bi bi-hdd-network-fill"></i>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;">Java Socket Server High Activity</div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.2rem;">Socket Server on Port 9090 reached 85% thread pool capacity.</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.4rem;">15 minutes ago</div>
+            </div>
+          </div>
+          <a href="chat.html" class="btn-primary-custom" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Open Diagnostics</a>
+        </div>
+
+        <div class="rcp-card" style="padding:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;border-left:4px solid var(--success);">
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.15);color:var(--success);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+              <i class="bi bi-database-check"></i>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;">MySQL Automated Backup Completed</div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.2rem;">Daily database snapshot saved successfully (1.2 GB).</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.4rem;">2 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+  function showModal(id) { document.getElementById(id).classList.add('active'); }
+  function hideModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function showToast(msg) {
+    let toast = document.getElementById('discNotifToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'discNotifToast';
+      toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(16,185,129,0.95);color:#fff;padding:0.85rem 1.35rem;border-radius:10px;font-weight:600;font-size:0.875rem;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:99999;display:flex;align-items:center;gap:0.6rem;backdrop-filter:blur(8px);';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<i class="bi bi-check-circle-fill" style="font-size:1.1rem;"></i> ${msg}`;
+    toast.style.display = 'flex';
+    setTimeout(() => { toast.style.display = 'none'; }, 3500);
+  }
+</script>
+</body>
+</html>

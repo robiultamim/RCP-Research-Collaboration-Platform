@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supervisor Approvals — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706);"><i class="bi bi-award-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Supervisor Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">OVERVIEW</div>
+      <a href="dashboard.html" class="nav-item "><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item "><i class="bi bi-folder-check"></i> My Projects <span class="nav-badge">8</span></a>
+
+      <div class="nav-section-title">RESEARCH MANAGEMENT</div>
+      <a href="projects.html" class="nav-item "><i class="bi bi-diagram-2"></i> Projects</a>
+      <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers <span class="nav-badge">32</span></a>
+      <a href="approvals.html" class="nav-item active"><i class="bi bi-check2-square"></i> Approvals <span class="nav-badge" style="background:var(--warning);">6</span></a>
+
+      <div class="nav-section-title">WORK MANAGEMENT</div>
+      <a href="tasks.html" class="nav-item "><i class="bi bi-list-check"></i> Tasks & Reviews</a>
+      <a href="discussions.html" class="nav-item "><i class="bi bi-chat-square-text"></i> Discussions</a>
+      <a href="files.html" class="nav-item "><i class="bi bi-file-earmark-check"></i> Files & Feedback</a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="chat.html" class="nav-item "><i class="bi bi-chat-dots-fill"></i> Team Chat</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item "><i class="bi bi-bell"></i> Notifications</a>
+      <a href="profile.html" class="nav-item "><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini" style="background:linear-gradient(135deg,#f59e0b,#d97706)">DR</div>
+        <div><div style="font-size:0.85rem;font-weight:600;">Dr. Rahman</div><div style="font-size:0.72rem;color:var(--text-muted);">Faculty Supervisor</div></div>
+      </div>
+    </div>
+  </aside>
+<div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Research Management / Approvals</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade">
+        <div><h1>Pending Approvals</h1><p>Review researcher join requests, task reviews, and proposals</p></div>
+      </div>
+
+      <div style="max-width:700px;">
+        <div class="rcp-card mb-3" style="padding:1.5rem;" id="appr-1">
+          <div style="font-weight:700;font-size:1rem;margin-bottom:0.3rem;">Alex wants to join AI Research Project</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Student Researcher · Department of CSE · Skills: Python, PyTorch</div>
+          <div style="display:flex;gap:0.75rem;">
+            <button class="btn-success-custom" onclick="document.getElementById('appr-1').remove()"><i class="bi bi-check-lg"></i> Accept</button>
+            <button class="btn-danger-custom" onclick="document.getElementById('appr-1').remove()"><i class="bi bi-x-lg"></i> Reject</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+</script>
+</body>
+</html>

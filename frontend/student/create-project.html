@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Project — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="bi bi-diagram-3-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Research Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">WORKSPACE</div>
+      <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="projects.html" class="nav-item active"><i class="bi bi-folder2-open"></i> My Projects <span class="nav-badge">4</span></a>
+      <a href="tasks.html" class="nav-item"><i class="bi bi-kanban"></i> My Tasks <span class="nav-badge">7</span></a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="researchers.html" class="nav-item"><i class="bi bi-people"></i> Researchers</a>
+      <a href="discussions.html" class="nav-item"><i class="bi bi-chat-square-dots"></i> Discussions</a>
+      <a href="files.html" class="nav-item"><i class="bi bi-cloud-arrow-up"></i> Files</a>
+      <a href="chat.html" class="nav-item"><i class="bi bi-chat-dots-fill"></i> Chat <span class="nav-badge">5</span></a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item"><i class="bi bi-bell"></i> Notifications <span class="nav-badge">3</span></a>
+      <a href="profile.html" class="nav-item"><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini">US</div>
+        <div><div style="font-size:0.85rem;font-weight:600;" id="sbUserName">Researcher</div><div style="font-size:0.72rem;color:var(--text-muted);">Student Researcher</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Research Workspace / Create Project</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade">
+        <div><h1>Create Research Project</h1><p>Start a new academic project initiative</p></div>
+      </div>
+      <div class="rcp-card" style="padding:2rem;max-width:760px;">
+        <form id="createProjectForm">
+          <div class="form-group">
+            <label class="form-label">Project Title *</label>
+            <input type="text" id="projTitle" class="form-control-custom" placeholder="e.g. LLM Reasoning Benchmark for Bengali" required />
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Research Area Domain *</label>
+              <select id="projArea" class="form-control-custom" required>
+                <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+                <option value="Natural Language Processing (NLP)">Natural Language Processing (NLP)</option>
+                <option value="Computer Vision & Image Processing">Computer Vision & Image Processing</option>
+                <option value="Cyber Security & Cryptography">Cyber Security & Cryptography</option>
+                <option value="Cloud Computing & Distributed Systems">Cloud Computing & Distributed Systems</option>
+                <option value="Internet of Things (IoT) & Smart Systems">Internet of Things (IoT) & Smart Systems</option>
+                <option value="Data Science & Big Data Analytics">Data Science & Big Data Analytics</option>
+                <option value="Software Engineering & DevOps">Software Engineering & DevOps</option>
+                <option value="Blockchain & Decentralized Systems">Blockchain & Decentralized Systems</option>
+                <option value="Bioinformatics & Computational Biology">Bioinformatics & Computational Biology</option>
+                <option value="Robotics & Autonomous Systems">Robotics & Autonomous Systems</option>
+                <option value="Human-Computer Interaction (HCI)">Human-Computer Interaction (HCI)</option>
+                <option value="Quantum Information & Computing">Quantum Information & Computing</option>
+                <option value="Information Retrieval & Knowledge Graphs">Information Retrieval & Knowledge Graphs</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Deadline *</label>
+              <input type="date" id="projDeadline" class="form-control-custom" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Description & Research Objectives *</label>
+            <textarea id="projDesc" class="form-control-custom" rows="5" placeholder="Detail the problem statement, methodology, expected dataset, and research goals..." required></textarea>
+          </div>
+          <button type="submit" id="btnLaunchProject" class="btn-primary-custom" style="padding:0.75rem 2rem;">
+            <i class="bi bi-rocket-takeoff"></i> Launch Project
+          </button>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+</script>
+</body>
+</html>

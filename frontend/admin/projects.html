@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Projects Directory — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#ef4444,#b91c1c);"><i class="bi bi-shield-lock-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Administration</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">OVERVIEW</div>
+      <a href="dashboard.html" class="nav-item "><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="reports.html" class="nav-item "><i class="bi bi-graph-up-arrow"></i> Reports & Analytics</a>
+
+      <div class="nav-section-title">USER MANAGEMENT</div>
+      <a href="users.html" class="nav-item "><i class="bi bi-person-badge"></i> Users Directory <span class="nav-badge">1248</span></a>
+      <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers Directory</a>
+
+      <div class="nav-section-title">PLATFORM</div>
+      <a href="projects.html" class="nav-item active"><i class="bi bi-folder2-open"></i> All Projects <span class="nav-badge">186</span></a>
+      <a href="tasks.html" class="nav-item "><i class="bi bi-kanban"></i> Task Monitoring</a>
+      <a href="discussions.html" class="nav-item "><i class="bi bi-flag-fill"></i> Discussions Moderation</a>
+      <a href="files.html" class="nav-item "><i class="bi bi-file-earmark-lock"></i> File Moderation</a>
+      <a href="chat.html" class="nav-item "><i class="bi bi-chat-left-dots"></i> Chat Diagnostics</a>
+
+      <div class="nav-section-title">SYSTEM</div>
+      <a href="notifications.html" class="nav-item "><i class="bi bi-bell"></i> System Alerts</a>
+      <a href="settings.html" class="nav-item "><i class="bi bi-gear-fill"></i> Settings</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="profile.html" class="nav-item "><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">SA</div>
+        <div><div style="font-size:0.85rem;font-weight:600;">System Admin</div><div style="font-size:0.72rem;color:var(--text-muted);">Platform Administrator</div></div>
+      </div>
+    </div>
+  </aside>
+<div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Platform / Projects</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header animate-fade"><div><h1>Platform Projects Directory</h1><p>View all projects across research areas</p></div></div>
+      <div class="rcp-card" style="padding:1.5rem;">
+        <table class="table-custom">
+          <thead><tr><th>Project Title</th><th>Owner</th><th>Supervisor</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">AI Research Project</td><td>Alex</td><td>Dr. Rahman</td><td><span class="badge-custom badge-active">ACTIVE</span></td>
+              <td>
+                <a href="project-details.html" class="btn-ghost" style="padding:0.3rem 0.6rem;"><i class="bi bi-eye"></i> View</a>
+                <button class="btn-ghost" style="padding:0.3rem 0.6rem;color:var(--danger);"><i class="bi bi-archive"></i> Archive</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+</script>
+</body>
+</html>
