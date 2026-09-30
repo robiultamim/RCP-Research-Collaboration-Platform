@@ -237,11 +237,53 @@ public class FileController {
     }
 
     /**
-     * GET /api/files (Admin only — all files)
+     * GET /api/files?userId={userId}
+     * If userId is provided:
+     *   - Admin gets all files
+     *   - Regular user gets ONLY files uploaded by themselves OR files belonging to projects they belong to
+     * If no userId is provided:
+     *   - Returns all files (backward compatible for admin)
      */
     @GetMapping
-    public ResponseEntity<ApiResponse<List<FileResource>>> getAllFiles() {
-        List<FileResource> list = fileRepository.findAll();
-        return ResponseEntity.ok(new ApiResponse<>(true, "All files fetched", list));
+    public ResponseEntity<ApiResponse<List<FileResource>>> getAllFiles(
+            @RequestParam(value = "userId", required = false) Long userId) {
+
+        if (userId == null) {
+            List<FileResource> list = fileRepository.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "All files fetched", list));
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent() && "ADMIN".equalsIgnoreCase(userOpt.get().getRole())) {
+            List<FileResource> list = fileRepository.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "All files fetched for admin", list));
+        }
+
+        // Get projects where user is owner, supervisor, or active member
+        List<Project> ownerProjects = projectRepository.findByOwnerId(userId);
+        List<Project> supervisorProjects = projectRepository.findBySupervisorId(userId);
+        List<ProjectMember> memberships = memberRepository.findByUserId(userId);
+
+        Set<Long> userProjectIds = new HashSet<>();
+        for (Project p : ownerProjects) userProjectIds.add(p.getId());
+        for (Project p : supervisorProjects) userProjectIds.add(p.getId());
+        for (ProjectMember pm : memberships) {
+            if ("ACTIVE".equalsIgnoreCase(pm.getStatus())) {
+                userProjectIds.add(pm.getProjectId());
+            }
+        }
+
+        List<FileResource> allFiles = fileRepository.findAll();
+        List<FileResource> visibleFiles = new ArrayList<>();
+        for (FileResource f : allFiles) {
+            // User can see file if they uploaded it OR if it belongs to one of their projects
+            boolean isUploader = userId.equals(f.getUploaderId());
+            boolean isInUserProject = f.getProjectId() != null && userProjectIds.contains(f.getProjectId());
+            if (isUploader || isInUserProject) {
+                visibleFiles.add(f);
+            }
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "User accessible files fetched", visibleFiles));
     }
 }

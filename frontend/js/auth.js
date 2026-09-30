@@ -224,38 +224,83 @@ function initProfilePage(user) {
    2. DASHBOARD PAGE
    ============================================================ */
 async function initDashboardPage(user) {
-  const statsRes = await apiCall('GET', '/admin/stats');
-  if (statsRes.success && statsRes.data) {
-    const s = statsRes.data;
-    const statCards = document.querySelectorAll('.stat-value');
-    if (statCards.length >= 4) {
-      statCards[0].textContent = String(s.activeProjects || 0).padStart(2, '0');
-      statCards[1].textContent = String(s.totalTasks || 0).padStart(2, '0');
-      statCards[2].textContent = String(s.totalProjects || 0).padStart(2, '0');
-      statCards[3].textContent = String(s.totalUsers || 0).padStart(2, '0');
+  // 1. Dynamic Greeting Name
+  const greetingH2 = document.querySelector('.greeting-text h2, .supervisor-greeting h2');
+  if (greetingH2 && user.name) {
+    const hour = new Date().getHours();
+    const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    greetingH2.innerHTML = `${timeGreeting}, ${user.name} 👋`;
+  }
+
+  // 2. Personal Real-Time Dashboard Stats
+  const statCards = document.querySelectorAll('.stat-value');
+  if (user.role === 'ADMIN') {
+    const statsRes = await apiCall('GET', '/admin/stats');
+    if (statsRes.success && statsRes.data) {
+      const s = statsRes.data;
+      if (statCards.length >= 4) {
+        statCards[0].textContent = String(s.activeProjects || 0).padStart(2, '0');
+        statCards[1].textContent = String(s.totalTasks || 0).padStart(2, '0');
+        statCards[2].textContent = String(s.totalProjects || 0).padStart(2, '0');
+        statCards[3].textContent = String(s.totalUsers || 0).padStart(2, '0');
+      }
+    }
+  } else {
+    const statsRes = await apiCall('GET', `/users/${user.id}/dashboard-stats`);
+    if (statsRes.success && statsRes.data) {
+      const s = statsRes.data;
+      if (statCards.length >= 4) {
+        statCards[0].textContent = String(s.activeProjects || 0).padStart(2, '0');
+        statCards[1].textContent = String(s.pendingTasks || 0).padStart(2, '0');
+        statCards[2].textContent = String(s.completedTasks || 0).padStart(2, '0');
+        statCards[3].textContent = String(s.messagesCount || 0).padStart(2, '0');
+      }
     }
   }
 
+  // 3. Update sidebar badge with user's enrolled project count
+  const myProjRes = await apiCall('GET', `/projects/user/${user.id}`);
+  const userProjects = (myProjRes.success && myProjRes.data) ? myProjRes.data : [];
+  const projBadge = document.getElementById('projNavBadge') || document.querySelector('.nav-item[href*="projects"] .nav-badge');
+  if (projBadge) {
+    projBadge.textContent = userProjects.length;
+  }
+
+  // 4. "Active Research Projects" Section — shows available public research projects to explore
   const projRes = await apiCall('GET', '/projects');
   if (projRes.success && projRes.data && projRes.data.length > 0) {
+    const viewAllLink = document.querySelector('a[href*="projects.html"]');
+    if (viewAllLink && viewAllLink.textContent.includes('View All')) {
+      viewAllLink.href = 'projects.html?tab=all';
+    }
+
     const projContainer = document.querySelector('.main-content .page-content > div:nth-child(3) > div:first-child > div:nth-child(2)');
     if (projContainer) {
-      projContainer.innerHTML = projRes.data.slice(0, 3).map(p => `
-        <div class="rcp-card" style="padding:1.25rem;cursor:pointer;margin-bottom:0.75rem;" onclick="window.location.href='projects.html'">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
-            <div>
-              <div style="font-size:0.72rem;color:var(--text-muted);font-weight:700;letter-spacing:0.06em;">${(p.researchArea || 'RESEARCH').toUpperCase()}</div>
-              <div style="font-weight:700;font-size:1rem;margin-top:0.2rem;">${p.title}</div>
+      const activeProjects = projRes.data.filter(p => (p.status || '').toUpperCase() === 'ACTIVE');
+      const displayProjects = activeProjects.length > 0 ? activeProjects.slice(0, 3) : projRes.data.slice(0, 3);
+      projContainer.innerHTML = displayProjects.map(p => {
+        const isEnrolled = userProjects.some(up => up.id === p.id);
+        const enrolledBadge = isEnrolled 
+          ? `<span class="badge-custom" style="background:rgba(16,185,129,0.15);color:#10b981;font-weight:700;"><i class="bi bi-check-circle-fill"></i> Joined</span>` 
+          : `<span class="badge-custom badge-active">${p.status || 'ACTIVE'}</span>`;
+
+        return `
+          <div class="rcp-card" style="padding:1.25rem;cursor:pointer;margin-bottom:0.75rem;" onclick="window.location.href='project-details.html?id=${p.id}'">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted);font-weight:700;letter-spacing:0.06em;">${(p.researchArea || 'RESEARCH').toUpperCase()}</div>
+                <div style="font-weight:700;font-size:1rem;margin-top:0.2rem;">${p.title}</div>
+              </div>
+              ${enrolledBadge}
             </div>
-            <span class="badge-custom badge-active">${p.status || 'ACTIVE'}</span>
+            <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.6rem;">${p.description || 'Collaborative university research exploration.'}</p>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);">
+              <span><i class="bi bi-calendar3"></i> Deadline: ${p.deadline || 'Flexible'}</span>
+              <span style="color:var(--primary-light);font-weight:600;"><i class="bi bi-folder-check"></i> Project #${p.id}</span>
+            </div>
           </div>
-          <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.6rem;">${p.description || 'No description'}</p>
-          <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);">
-            <span><i class="bi bi-calendar3"></i> Deadline: ${p.deadline || 'Flexible'}</span>
-            <span style="color:var(--primary-light);font-weight:600;"><i class="bi bi-folder-check"></i> Project #${p.id}</span>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
   }
 }
@@ -309,33 +354,79 @@ function initCreateProjectPage(user) {
 }
 
 /* ============================================================
-   4. PROJECTS LIST PAGE — Live Search & Filter
+   4. PROJECTS LIST PAGE — Live Search & Filter + My vs All Tabs
    ============================================================ */
+let currentProjectTab = 'my';
+let myProjectsCache = [];
 let allProjectsCache = [];
 
 async function initProjectsPage(user) {
   const grid = document.getElementById('projectsGrid') || document.querySelector('.grid-3, .projects-grid');
   if (!grid) return;
 
-  const res = await apiCall('GET', '/projects');
-  if (res.success && res.data) {
-    allProjectsCache = res.data;
-    renderFilteredProjects(allProjectsCache, grid);
+  // Read URL query parameter for tab: ?tab=all or ?tab=my
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedTab = urlParams.get('tab');
+  currentProjectTab = (requestedTab === 'all') ? 'all' : 'my';
 
-    const badge = document.getElementById('projNavBadge');
-    if (badge) badge.textContent = allProjectsCache.length;
-  }
+  // Fetch both caches in parallel
+  const [allRes, myRes] = await Promise.all([
+    apiCall('GET', '/projects'),
+    apiCall('GET', '/projects/user/' + user.id)
+  ]);
+
+  if (allRes.success && allRes.data) allProjectsCache = allRes.data;
+  if (myRes.success && myRes.data) myProjectsCache = myRes.data;
+
+  // Update count badges
+  const myBadge = document.getElementById('myProjCountBadge');
+  if (myBadge) myBadge.textContent = myProjectsCache.length;
+  const allBadge = document.getElementById('allProjCountBadge');
+  if (allBadge) allBadge.textContent = allProjectsCache.length;
+  const navBadge = document.getElementById('projNavBadge');
+  if (navBadge) navBadge.textContent = myProjectsCache.length;
+
+  window.switchProjectTab = (tab) => {
+    currentProjectTab = tab;
+    const tabBtnMy = document.getElementById('tabBtnMy');
+    const tabBtnAll = document.getElementById('tabBtnAll');
+    if (tab === 'my') {
+      if (tabBtnMy) {
+        tabBtnMy.className = 'btn-primary-custom';
+        tabBtnMy.style.background = 'var(--primary)';
+        tabBtnMy.style.color = '#fff';
+      }
+      if (tabBtnAll) {
+        tabBtnAll.className = 'btn-outline-custom';
+        tabBtnAll.style.background = 'transparent';
+        tabBtnAll.style.color = 'var(--text-secondary)';
+      }
+    } else {
+      if (tabBtnMy) {
+        tabBtnMy.className = 'btn-outline-custom';
+        tabBtnMy.style.background = 'transparent';
+        tabBtnMy.style.color = 'var(--text-secondary)';
+      }
+      if (tabBtnAll) {
+        tabBtnAll.className = 'btn-primary-custom';
+        tabBtnAll.style.background = 'var(--primary)';
+        tabBtnAll.style.color = '#fff';
+      }
+    }
+    applyProjectFilters();
+  };
 
   const searchInput = document.getElementById('searchProjectInput') || document.querySelector('.filter-search input');
   const areaSelect = document.getElementById('filterAreaSelect') || document.querySelectorAll('.filter-select')[0];
   const statusSelect = document.getElementById('filterStatusSelect') || document.querySelectorAll('.filter-select')[1];
 
   function applyProjectFilters() {
+    const listToFilter = (currentProjectTab === 'my') ? myProjectsCache : allProjectsCache;
     const q = (searchInput?.value || '').toLowerCase().trim();
     const area = (areaSelect?.value || '').toLowerCase().trim();
     const status = (statusSelect?.value || '').toLowerCase().trim();
 
-    const filtered = allProjectsCache.filter(p => {
+    const filtered = listToFilter.filter(p => {
       const matchQ = !q || (p.title || '').toLowerCase().includes(q) || 
                             (p.description || '').toLowerCase().includes(q) || 
                             (p.researchArea || '').toLowerCase().includes(q);
@@ -344,43 +435,83 @@ async function initProjectsPage(user) {
       return matchQ && matchArea && matchStatus;
     });
 
-    renderFilteredProjects(filtered, grid);
+    renderFilteredProjects(filtered, grid, currentProjectTab, user);
   }
 
   if (searchInput) searchInput.addEventListener('input', applyProjectFilters);
   if (areaSelect) areaSelect.addEventListener('change', applyProjectFilters);
   if (statusSelect) statusSelect.addEventListener('change', applyProjectFilters);
+
+  window.switchProjectTab(currentProjectTab);
 }
 
-function renderFilteredProjects(projects, grid) {
+function renderFilteredProjects(projects, grid, activeTab = 'my', currentUser = {}) {
   if (!projects || projects.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);"><i class="bi bi-search" style="font-size:1.8rem;opacity:0.5;"></i><p style="margin-top:0.75rem;">No matching research projects found.</p></div>';
+    if (activeTab === 'my') {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:3.5rem 1.5rem;background:var(--card-bg);border:1px dashed var(--border-color);border-radius:12px;">
+          <i class="bi bi-folder-x" style="font-size:2.5rem;color:var(--text-muted);opacity:0.6;"></i>
+          <h3 style="font-size:1.15rem;font-weight:700;margin-top:1rem;color:var(--text-primary);">You Haven't Enrolled in Any Projects Yet</h3>
+          <p style="color:var(--text-muted);font-size:0.88rem;max-width:440px;margin:0.5rem auto 1.5rem auto;line-height:1.5;">
+            You can browse all available university research projects and join a team, or launch a brand new research project.
+          </p>
+          <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+            <button onclick="switchProjectTab('all')" class="btn-primary-custom" style="font-size:0.85rem;padding:0.5rem 1.25rem;cursor:pointer;">
+              <i class="bi bi-globe"></i> Browse All Projects
+            </button>
+            <a href="create-project.html" class="btn-outline-custom" style="font-size:0.85rem;padding:0.5rem 1.25rem;">
+              <i class="bi bi-plus-lg"></i> Launch New Project
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);"><i class="bi bi-search" style="font-size:1.8rem;opacity:0.5;"></i><p style="margin-top:0.75rem;">No matching research projects found.</p></div>';
+    }
     return;
   }
 
-  grid.innerHTML = projects.map(p => `
-    <div class="rcp-card project-card" style="padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;">
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
-          <span class="chip chip-cyan" style="font-size:0.72rem;">${p.researchArea || 'Research'}</span>
-          <span class="badge-custom badge-active">${p.status || 'ACTIVE'}</span>
+  grid.innerHTML = projects.map(p => {
+    const isOwner = currentUser && (currentUser.id === p.ownerId);
+    const isSupervisor = currentUser && (currentUser.id === p.supervisorId);
+    const isEnrolled = myProjectsCache.some(mp => mp.id === p.id);
+
+    let roleBadge = '';
+    if (isOwner) {
+      roleBadge = '<span class="badge-custom" style="background:rgba(99,102,241,0.2);color:#818cf8;font-weight:700;"><i class="bi bi-star-fill"></i> Lead Owner</span>';
+    } else if (isSupervisor) {
+      roleBadge = '<span class="badge-custom" style="background:rgba(245,158,11,0.2);color:#fbbf24;font-weight:700;"><i class="bi bi-award-fill"></i> Supervisor</span>';
+    } else if (isEnrolled) {
+      roleBadge = '<span class="badge-custom" style="background:rgba(16,185,129,0.2);color:#34d399;font-weight:700;"><i class="bi bi-check-circle-fill"></i> Enrolled</span>';
+    }
+
+    return `
+      <div class="rcp-card project-card" style="padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
+            <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
+              <span class="chip chip-cyan" style="font-size:0.72rem;">${p.researchArea || 'Research'}</span>
+              ${roleBadge}
+            </div>
+            <span class="badge-custom badge-active">${p.status || 'ACTIVE'}</span>
+          </div>
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;line-height:1.4;">${p.title}</h3>
+          <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem;">
+            ${(p.description || 'Collaborative research exploration.').substring(0, 120)}${(p.description || '').length > 120 ? '...' : ''}
+          </p>
         </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;line-height:1.4;">${p.title}</h3>
-        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem;">
-          ${(p.description || 'Collaborative research exploration.').substring(0, 120)}${(p.description || '').length > 120 ? '...' : ''}
-        </p>
-      </div>
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text-muted);border-top:1px solid var(--border-color);padding-top:0.75rem;margin-bottom:0.75rem;">
-          <span><i class="bi bi-calendar3"></i> ${p.deadline || 'No deadline'}</span>
-          <span style="color:var(--primary-light);font-weight:600;"><i class="bi bi-person-circle"></i> ID: #${p.id}</span>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text-muted);border-top:1px solid var(--border-color);padding-top:0.75rem;margin-bottom:0.75rem;">
+            <span><i class="bi bi-calendar3"></i> ${p.deadline || 'No deadline'}</span>
+            <span style="color:var(--primary-light);font-weight:600;"><i class="bi bi-person-circle"></i> ID: #${p.id}</span>
+          </div>
+          <a href="project-details.html?id=${p.id}" class="btn-primary-custom w-full" style="justify-content:center;font-size:0.85rem;padding:0.5rem;">
+            <i class="bi bi-eye"></i> View Project Details
+          </a>
         </div>
-        <a href="project-details.html?id=${p.id}" class="btn-primary-custom w-full" style="justify-content:center;font-size:0.85rem;padding:0.5rem;">
-          <i class="bi bi-eye"></i> View Project Details
-        </a>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 /* ============================================================
@@ -1671,16 +1802,29 @@ async function initFilesPage(user) {
   const container = document.getElementById('filesListContainer');
   if (!container) return;
 
-  const projRes = await apiCall('GET', '/projects');
+  // 1. Only load projects where user is enrolled or owner
+  const projRes = await apiCall('GET', '/projects/user/' + user.id);
   const projSelect = document.getElementById('fileProjectSelect');
-  if (projSelect && projRes.success && projRes.data) {
-    projSelect.innerHTML = projRes.data.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+  const uploadSubmitBtn = document.getElementById('btnUploadSubmit');
+
+  if (projSelect) {
+    if (projRes.success && projRes.data && projRes.data.length > 0) {
+      projSelect.innerHTML = projRes.data.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+      if (uploadSubmitBtn) uploadSubmitBtn.disabled = false;
+    } else {
+      projSelect.innerHTML = '<option value="">-- No Enrolled Projects Available --</option>';
+      if (uploadSubmitBtn) {
+        uploadSubmitBtn.disabled = true;
+        uploadSubmitBtn.title = 'You must create or join a project before you can upload files.';
+      }
+    }
   }
 
-  const res = await apiCall('GET', '/files');
+  // 2. Fetch user-scoped accessible files
+  const res = await apiCall('GET', '/files?userId=' + user.id);
   if (res.success && res.data) {
     allFilesCache = res.data;
-    renderFilteredFiles(allFilesCache, container);
+    renderFilteredFiles(allFilesCache, container, user);
   }
 
   const searchInput = document.getElementById('searchFileInput');
@@ -1688,14 +1832,22 @@ async function initFilesPage(user) {
     searchInput.addEventListener('input', () => {
       const q = searchInput.value.toLowerCase().trim();
       const filtered = allFilesCache.filter(f => (f.originalFilename || f.filename || '').toLowerCase().includes(q));
-      renderFilteredFiles(filtered, container);
+      renderFilteredFiles(filtered, container, user);
     });
   }
 }
 
-function renderFilteredFiles(files, container) {
+function renderFilteredFiles(files, container, user = {}) {
   if (!files || files.length === 0) {
-    container.innerHTML = '<div class="rcp-card" style="text-align:center;padding:3rem;color:var(--text-muted);"><i class="bi bi-file-earmark-x" style="font-size:2rem;opacity:0.5;"></i><p style="margin-top:0.75rem;">No research files uploaded yet. Click "Upload Resource" above!</p></div>';
+    container.innerHTML = `
+      <div class="rcp-card" style="text-align:center;padding:3.5rem 1.5rem;color:var(--text-muted);border:1px dashed var(--border-color);">
+        <i class="bi bi-file-earmark-lock" style="font-size:2.5rem;opacity:0.5;color:var(--text-muted);"></i>
+        <h3 style="font-size:1.1rem;font-weight:700;margin-top:1rem;color:var(--text-primary);">No Accessible Research Files</h3>
+        <p style="margin-top:0.4rem;font-size:0.88rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.5;">
+          You can only view files uploaded by yourself or shared inside research project groups you belong to. Files will appear here once you or your team members upload them.
+        </p>
+      </div>
+    `;
     return;
   }
 
@@ -1721,7 +1873,7 @@ function renderFilteredFiles(files, container) {
             </div>
           </div>
         </div>
-        <a href="http://localhost:8080/api/files/download/${f.id}" target="_blank" download class="btn-outline-custom" style="font-size:0.82rem;padding:0.45rem 1rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">
+        <a href="http://localhost:8080/api/files/download/${f.id}?userId=${user?.id || ''}" target="_blank" download class="btn-outline-custom" style="font-size:0.82rem;padding:0.45rem 1rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;">
           <i class="bi bi-download"></i> Download File
         </a>
       </div>

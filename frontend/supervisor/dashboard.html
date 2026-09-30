@@ -21,10 +21,10 @@
     <nav class="sidebar-nav">
       <div class="nav-section-title">OVERVIEW</div>
       <a href="dashboard.html" class="nav-item active"><i class="bi bi-speedometer2"></i> Dashboard</a>
-      <a href="projects.html" class="nav-item "><i class="bi bi-folder-check"></i> My Projects <span class="nav-badge">8</span></a>
+      <a href="projects.html?tab=my" class="nav-item "><i class="bi bi-folder-check"></i> My Projects <span class="nav-badge" id="projNavBadge">0</span></a>
 
       <div class="nav-section-title">RESEARCH MANAGEMENT</div>
-      <a href="projects.html" class="nav-item "><i class="bi bi-diagram-2"></i> Projects</a>
+      <a href="projects.html?tab=all" class="nav-item "><i class="bi bi-diagram-2"></i> All Projects</a>
       <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers <span class="nav-badge">32</span></a>
       <a href="approvals.html" class="nav-item "><i class="bi bi-check2-square"></i> Approvals <span class="nav-badge" style="background:var(--warning);">6</span></a>
 
@@ -67,7 +67,7 @@
           <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:700;color:#fbbf24;margin-bottom:0.75rem;">
             <i class="bi bi-award-fill"></i> Supervision Analytics & Control
           </div>
-          <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.35rem;">Welcome back, Dr. Rahman 👋</h2>
+          <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.35rem;">Welcome 👋</h2>
           <p style="color:var(--text-secondary);font-size:0.9rem;">Here is the supervision progress and pending action items for your research teams.</p>
         </div>
       </div>
@@ -75,23 +75,23 @@
       <div class="grid-4 mb-3">
         <div class="stat-card amber">
           <div class="stat-icon amber"><i class="bi bi-folder-check"></i></div>
-          <div class="stat-value">08</div>
+          <div class="stat-value">00</div>
           <div class="stat-label">Active Projects</div>
         </div>
         <div class="stat-card cyan">
-          <div class="stat-icon cyan"><i class="bi bi-people-fill"></i></div>
-          <div class="stat-value">32</div>
-          <div class="stat-label">Researchers</div>
+          <div class="stat-icon cyan"><i class="bi bi-lightning-charge"></i></div>
+          <div class="stat-value">00</div>
+          <div class="stat-label">Pending Tasks</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-icon green"><i class="bi bi-file-earmark-check"></i></div>
-          <div class="stat-value">17</div>
-          <div class="stat-label">Pending Reviews</div>
+          <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+          <div class="stat-value">00</div>
+          <div class="stat-label">Completed</div>
         </div>
         <div class="stat-card indigo">
-          <div class="stat-icon indigo" style="background:rgba(245,158,11,0.15);color:#fbbf24;"><i class="bi bi-check2-square"></i></div>
-          <div class="stat-value">06</div>
-          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-icon indigo" style="background:rgba(245,158,11,0.15);color:#fbbf24;"><i class="bi bi-chat-dots"></i></div>
+          <div class="stat-value">00</div>
+          <div class="stat-label">Messages</div>
         </div>
       </div>
 

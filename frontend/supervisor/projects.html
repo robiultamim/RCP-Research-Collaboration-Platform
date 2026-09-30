@@ -65,6 +65,16 @@
         <a href="create-project.html" class="btn-primary-custom"><i class="bi bi-plus-lg"></i> Create Project</a>
       </div>
 
+      <!-- Project Scope Tabs -->
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;border-bottom:1px solid var(--border-color);padding-bottom:0.75rem;">
+        <button id="tabBtnMy" onclick="switchProjectTab('my')" class="btn-primary-custom" style="font-size:0.85rem;padding:0.45rem 1rem;cursor:pointer;">
+          <i class="bi bi-folder-check"></i> My Supervised Projects <span id="myProjCountBadge" style="background:rgba(255,255,255,0.25);border-radius:9999px;padding:0.1rem 0.5rem;font-size:0.75rem;margin-left:0.35rem;">0</span>
+        </button>
+        <button id="tabBtnAll" onclick="switchProjectTab('all')" class="btn-outline-custom" style="font-size:0.85rem;padding:0.45rem 1rem;cursor:pointer;">
+          <i class="bi bi-globe"></i> All Available Projects <span id="allProjCountBadge" style="background:rgba(255,255,255,0.1);border-radius:9999px;padding:0.1rem 0.5rem;font-size:0.75rem;margin-left:0.35rem;">0</span>
+        </button>
+      </div>
+
       <div class="filter-bar">
         <div class="filter-search"><i class="bi bi-search"></i><input type="text" id="searchProjectInput" placeholder="Search projects by title, keywords..." /></div>
         <select class="filter-select" id="filterAreaSelect">

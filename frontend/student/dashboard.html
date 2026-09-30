@@ -21,7 +21,7 @@
     <nav class="sidebar-nav">
       <div class="nav-section-title">WORKSPACE</div>
       <a href="dashboard.html" class="nav-item active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-      <a href="projects.html" class="nav-item "><i class="bi bi-folder2-open"></i> My Projects <span class="nav-badge">4</span></a>
+      <a href="projects.html?tab=my" class="nav-item "><i class="bi bi-folder2-open"></i> My Projects <span class="nav-badge" id="projNavBadge">0</span></a>
       <a href="tasks.html" class="nav-item "><i class="bi bi-kanban"></i> My Tasks <span class="nav-badge">7</span></a>
 
       <div class="nav-section-title">COLLABORATION</div>
@@ -58,7 +58,7 @@
     <main class="page-content">
       <div class="greeting-card animate-fade">
         <div class="greeting-text">
-          <h2>Good evening, Alex 👋</h2>
+          <h2>Welcome 👋</h2>
           <p>Here's what's happening with your research collaboration today.</p>
           <div style="display:flex;gap:0.75rem;margin-top:1.25rem;flex-wrap:wrap;">
             <a href="tasks.html" class="btn-primary-custom" style="font-size:0.85rem;padding:0.55rem 1.25rem;"><i class="bi bi-kanban"></i> View My Tasks</a>
@@ -70,22 +70,22 @@
       <div class="grid-4 mb-3">
         <div class="stat-card indigo">
           <div class="stat-icon indigo"><i class="bi bi-folder2"></i></div>
-          <div class="stat-value">04</div>
+          <div class="stat-value">00</div>
           <div class="stat-label">Active Projects</div>
         </div>
         <div class="stat-card cyan">
           <div class="stat-icon cyan"><i class="bi bi-lightning-charge"></i></div>
-          <div class="stat-value">07</div>
+          <div class="stat-value">00</div>
           <div class="stat-label">Pending Tasks</div>
         </div>
         <div class="stat-card green">
           <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
-          <div class="stat-value">12</div>
+          <div class="stat-value">00</div>
           <div class="stat-label">Completed</div>
         </div>
         <div class="stat-card amber">
           <div class="stat-icon amber"><i class="bi bi-chat-dots"></i></div>
-          <div class="stat-value">05</div>
+          <div class="stat-value">00</div>
           <div class="stat-label">Messages</div>
         </div>
       </div>
@@ -94,7 +94,7 @@
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
             <h3 style="font-size:1.05rem;font-weight:700;">Active Research Projects</h3>
-            <a href="projects.html" style="font-size:0.8rem;color:var(--primary-light);font-weight:600;">View All →</a>
+            <a href="projects.html?tab=all" style="font-size:0.8rem;color:var(--primary-light);font-weight:600;">View All →</a>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:1rem;">
