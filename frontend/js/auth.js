@@ -117,20 +117,18 @@ function updateUserUI(user) {
     }
   });
 
-  document.querySelectorAll('.sidebar-footer div > div:first-child, #sbUserName').forEach(el => {
-    if (el.style.fontWeight === '600' || el.id === 'sbUserName') {
-      el.textContent = user.name || 'Researcher';
-    }
+  document.querySelectorAll('#sbUserName, .sidebar-footer .user-avatar-mini + div > div:first-child').forEach(el => {
+    el.textContent = user.name || 'Researcher';
   });
 
-  document.querySelectorAll('.sidebar-footer div > div:nth-child(2)').forEach(el => {
-    const roleTitle = user.role === 'SUPERVISOR' ? 'Faculty Supervisor' :
-                      user.role === 'ADMIN' ? 'Platform Administrator' : 'Student Researcher';
+  const roleTitle = user.role === 'SUPERVISOR' ? 'Faculty Supervisor' :
+                    user.role === 'ADMIN' ? 'Platform Administrator' : 'Student Researcher';
+  document.querySelectorAll('#sbUserRole, .sidebar-footer .user-avatar-mini + div > div:last-child').forEach(el => {
     el.textContent = roleTitle;
   });
 
   const firstName = user.name ? user.name.split(' ')[0] : 'Researcher';
-  const greetingHeading = document.querySelector('.greeting-text h2, .greeting-text h1, #greetingHeading');
+  const greetingHeading = document.querySelector('.greeting-text h2, .greeting-text h1, #greetingHeading, .supervisor-greeting h2');
   if (greetingHeading) {
     const hour = new Date().getHours();
     const timeOfDay = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -274,7 +272,8 @@ async function initDashboardPage(user) {
       viewAllLink.href = 'projects.html?tab=all';
     }
 
-    const projContainer = document.querySelector('.main-content .page-content > div:nth-child(3) > div:first-child > div:nth-child(2)');
+    const projContainer = document.getElementById('activeProjectsContainer') || 
+                          document.querySelector('.main-content .page-content > div:nth-child(3) > div:first-child > div:nth-child(2)');
     if (projContainer) {
       const activeProjects = projRes.data.filter(p => (p.status || '').toUpperCase() === 'ACTIVE');
       const displayProjects = activeProjects.length > 0 ? activeProjects.slice(0, 3) : projRes.data.slice(0, 3);
