@@ -1801,8 +1801,14 @@ async function initFilesPage(user) {
   const container = document.getElementById('filesListContainer');
   if (!container) return;
 
+  const currentUserId = user?.id || user?.userId;
+  if (!currentUserId) {
+    renderFilteredFiles([], container, user);
+    return;
+  }
+
   // 1. Only load projects where user is enrolled or owner
-  const projRes = await apiCall('GET', '/projects/user/' + user.id);
+  const projRes = await apiCall('GET', '/projects/user/' + currentUserId);
   const projSelect = document.getElementById('fileProjectSelect');
   const uploadSubmitBtn = document.getElementById('btnUploadSubmit');
 
@@ -1820,10 +1826,13 @@ async function initFilesPage(user) {
   }
 
   // 2. Fetch user-scoped accessible files
-  const res = await apiCall('GET', '/files?userId=' + user.id);
-  if (res.success && res.data) {
+  const res = await apiCall('GET', '/files?userId=' + currentUserId);
+  if (res.success && Array.isArray(res.data)) {
     allFilesCache = res.data;
     renderFilteredFiles(allFilesCache, container, user);
+  } else {
+    allFilesCache = [];
+    renderFilteredFiles([], container, user);
   }
 
   const searchInput = document.getElementById('searchFileInput');

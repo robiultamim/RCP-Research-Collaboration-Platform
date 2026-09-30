@@ -249,8 +249,8 @@ public class FileController {
             @RequestParam(value = "userId", required = false) Long userId) {
 
         if (userId == null) {
-            List<FileResource> list = fileRepository.findAll();
-            return ResponseEntity.ok(new ApiResponse<>(true, "All files fetched", list));
+            // Unscoped/unauthenticated requests must NEVER return platform files
+            return ResponseEntity.ok(new ApiResponse<>(true, "No user ID specified", new ArrayList<>()));
         }
 
         Optional<User> userOpt = userRepository.findById(userId);
