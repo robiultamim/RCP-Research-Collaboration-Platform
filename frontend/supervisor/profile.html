@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
-  <script src="../js/guards.js?v=6.1"></script>
+  <script src="../js/guards.js?v=6.2"></script>
 </head>
 <body>
 <div class="layout">
@@ -21,10 +21,10 @@
     <nav class="sidebar-nav">
       <div class="nav-section-title">OVERVIEW</div>
       <a href="dashboard.html" class="nav-item"><i class="bi bi-speedometer2"></i> Dashboard</a>
-      <a href="projects.html" class="nav-item"><i class="bi bi-folder-check"></i> My Projects <span class="nav-badge">8</span></a>
+      <a href="projects.html?tab=my" class="nav-item"><i class="bi bi-folder-check"></i> My Projects <span class="nav-badge">8</span></a>
 
       <div class="nav-section-title">RESEARCH MANAGEMENT</div>
-      <a href="projects.html" class="nav-item"><i class="bi bi-diagram-2"></i> Projects</a>
+      <a href="projects.html?tab=my" class="nav-item"><i class="bi bi-diagram-2"></i> Projects</a>
       <a href="researchers.html" class="nav-item"><i class="bi bi-people"></i> Researchers <span class="nav-badge">32</span></a>
       <a href="approvals.html" class="nav-item"><i class="bi bi-check2-square"></i> Approvals <span class="nav-badge" style="background:var(--warning);">6</span></a>
 
@@ -167,8 +167,8 @@
   </div>
 </div>
 
-<script src="../js/auth.js?v=6.1"></script>
-<script src="../js/api.js?v=6.1"></script>
+<script src="../js/auth.js?v=6.2"></script>
+<script src="../js/api.js?v=6.2"></script>
 <script>
   function toggleSidebar() {
     const sb = document.getElementById('sidebar');
