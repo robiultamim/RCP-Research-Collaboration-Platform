@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js?v=6.2"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#ef4444,#b91c1c);"><i class="bi bi-shield-lock-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Administration</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">OVERVIEW</div>
+      <a href="dashboard.html" class="nav-item active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="reports.html" class="nav-item "><i class="bi bi-graph-up-arrow"></i> Reports & Analytics</a>
+
+      <div class="nav-section-title">USER MANAGEMENT</div>
+      <a href="users.html" class="nav-item "><i class="bi bi-person-badge"></i> Users Directory <span class="nav-badge">1248</span></a>
+      <a href="researchers.html" class="nav-item "><i class="bi bi-people"></i> Researchers Directory</a>
+
+      <div class="nav-section-title">PLATFORM</div>
+      <a href="projects.html?tab=my" class="nav-item "><i class="bi bi-folder2-open"></i> All Projects <span class="nav-badge">186</span></a>
+      <a href="tasks.html" class="nav-item "><i class="bi bi-kanban"></i> Task Monitoring</a>
+      <a href="discussions.html" class="nav-item "><i class="bi bi-flag-fill"></i> Discussions Moderation</a>
+      <a href="files.html" class="nav-item "><i class="bi bi-file-earmark-lock"></i> File Moderation</a>
+      <a href="chat.html" class="nav-item "><i class="bi bi-chat-left-dots"></i> Chat Diagnostics</a>
+
+      <div class="nav-section-title">SYSTEM</div>
+      <a href="notifications.html" class="nav-item "><i class="bi bi-bell"></i> System Alerts</a>
+      <a href="settings.html" class="nav-item "><i class="bi bi-gear-fill"></i> Settings</a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="profile.html" class="nav-item "><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini" style="background:linear-gradient(135deg,#ef4444,#b91c1c)">SA</div>
+        <div><div style="font-size:0.85rem;font-weight:600;">System Admin</div><div style="font-size:0.72rem;color:var(--text-muted);">Platform Administrator</div></div>
+      </div>
+    </div>
+  </aside>
+<div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Administration / Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="window.location.href='profile.html'">US</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="admin-greeting animate-fade">
+        <div style="position:relative;z-index:1;">
+          <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:700;color:#f87171;margin-bottom:0.75rem;">
+            <i class="bi bi-shield-lock"></i> Platform Analytics & Administration
+          </div>
+          <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:0.35rem;">System Control Panel</h2>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">Monitoring users, active projects, moderation queues, and platform health.</p>
+        </div>
+      </div>
+
+      <div class="grid-4 mb-3">
+        <div class="stat-card indigo">
+          <div class="stat-icon indigo"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-value">1,248</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card cyan">
+          <div class="stat-icon cyan"><i class="bi bi-folder2"></i></div>
+          <div class="stat-value">186</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green"><i class="bi bi-lightning-charge"></i></div>
+          <div class="stat-value">124</div>
+          <div class="stat-label">Active Projects</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon amber" style="background:rgba(239,68,68,0.15);color:#f87171;"><i class="bi bi-flag-fill"></i></div>
+          <div class="stat-value">32</div>
+          <div class="stat-label">Pending Reports</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;" class="mb-3">
+        <div>
+          <div class="rcp-card mb-3" style="padding:1.5rem;">
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:1rem;">Platform Activity</h3>
+            <div class="grid-4" style="text-align:center;">
+              <div style="background:var(--bg-surface);padding:1rem;border-radius:var(--radius-md);">
+                <div style="font-size:0.8rem;color:var(--text-muted);">Users</div>
+                <div style="font-size:1.4rem;font-weight:800;color:var(--success);margin-top:0.2rem;">↑ 18%</div>
+              </div>
+              <div style="background:var(--bg-surface);padding:1rem;border-radius:var(--radius-md);">
+                <div style="font-size:0.8rem;color:var(--text-muted);">Projects</div>
+                <div style="font-size:1.4rem;font-weight:800;color:var(--success);margin-top:0.2rem;">↑ 12%</div>
+              </div>
+              <div style="background:var(--bg-surface);padding:1rem;border-radius:var(--radius-md);">
+                <div style="font-size:0.8rem;color:var(--text-muted);">Discussions</div>
+                <div style="font-size:1.4rem;font-weight:800;color:var(--success);margin-top:0.2rem;">↑ 24%</div>
+              </div>
+              <div style="background:var(--bg-surface);padding:1rem;border-radius:var(--radius-md);">
+                <div style="font-size:0.8rem;color:var(--text-muted);">Files</div>
+                <div style="font-size:1.4rem;font-weight:800;color:var(--success);margin-top:0.2rem;">↑ 31%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rcp-card" style="padding:1.5rem;">
+            <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:1rem;">Recent Projects</h3>
+            <table class="table-custom">
+              <thead><tr><th>Project Title</th><th>Owner</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">AI Research Project</td><td>Alex (Student)</td>
+                  <td><span class="badge-custom badge-active">ACTIVE</span></td>
+                  <td><a href="project-details.html" class="btn-ghost" style="padding:0.3rem 0.6rem;"><i class="bi bi-eye"></i></a></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Cyber Security NIDS</td><td>Maria (Supervisor)</td>
+                  <td><span class="badge-custom badge-active">ACTIVE</span></td>
+                  <td><a href="project-details.html" class="btn-ghost" style="padding:0.3rem 0.6rem;"><i class="bi bi-eye"></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="rcp-card mb-3" style="padding:1.25rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">System Health</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.85rem;">
+              <div style="display:flex;justify-content:space-between;"><span>Spring Boot API</span><span style="color:var(--success);font-weight:700;">● Operational</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>Java Socket Server</span><span style="color:var(--success);font-weight:700;">● Active (Port 9090)</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>MySQL Database</span><span style="color:var(--success);font-weight:700;">● Connected</span></div>
+            </div>
+          </div>
+
+          <div class="rcp-card" style="padding:1.25rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;">Reported Content</h3>
+            <div style="font-size:0.85rem;color:var(--text-muted);">2 discussions flagged for review</div>
+            <a href="discussions.html" class="btn-outline-custom w-full mt-2" style="justify-center;font-size:0.85rem;padding:0.5rem;"><i class="bi bi-flag"></i> Open Moderation</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+<script src="../js/auth.js?v=6.2"></script>
+<script src="../js/api.js?v=6.2"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+</script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 # ─── Java / Maven Build Outputs ───────────────────────────
 target/
 *.jar
+!rcp-backend-1.0.0.jar
+!RCP-DEPLOY/rcp-backend-1.0.0.jar
 *.war
 *.class
 *.original
@@ -28,14 +30,18 @@ uploads/
 # ─── Scratch / Dev Scripts (not needed in repo) ───────────
 scratch/
 
-# ─── RCP-DEPLOY (built artifacts folder, not source) ──────
-RCP-DEPLOY/
+# ─── RCP-DEPLOY (Allow deployment folder) ──────────────────
+!RCP-DEPLOY/
+!RCP-DEPLOY/**
 
 # ─── Large / Binary Files ─────────────────────────────────
 *.zip
 *.pdf
 *.sql
+!rcp_db_backup.sql
+!RCP-DEPLOY/rcp_db_backup.sql
 *.docx
+!RCP_University_Deployment_Guide.docx
 *.xlsx
 
 # ─── OS Files ─────────────────────────────────────────────

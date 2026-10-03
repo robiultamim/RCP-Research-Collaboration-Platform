@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile — RCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guards.js?v=6.2"></script>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="bi bi-diagram-3-fill"></i></div>
+      <div><div class="logo-text">RCP</div><div class="logo-sub">Research Workspace</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">WORKSPACE</div>
+      <a href="dashboard.html" class="nav-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="projects.html?tab=my" class="nav-item"><i class="bi bi-folder2-open"></i> My Projects <span class="nav-badge">4</span></a>
+      <a href="tasks.html" class="nav-item"><i class="bi bi-kanban"></i> My Tasks <span class="nav-badge">7</span></a>
+
+      <div class="nav-section-title">COLLABORATION</div>
+      <a href="researchers.html" class="nav-item"><i class="bi bi-people"></i> Researchers</a>
+      <a href="discussions.html" class="nav-item"><i class="bi bi-chat-square-dots"></i> Discussions</a>
+      <a href="files.html" class="nav-item"><i class="bi bi-cloud-arrow-up"></i> Files</a>
+      <a href="chat.html" class="nav-item"><i class="bi bi-chat-dots-fill"></i> Chat <span class="nav-badge">5</span></a>
+
+      <div class="nav-section-title">ACCOUNT</div>
+      <a href="notifications.html" class="nav-item"><i class="bi bi-bell"></i> Notifications <span class="nav-badge">3</span></a>
+      <a href="profile.html" class="nav-item active"><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="javascript:void(0)" onclick="logoutUser()" class="nav-item"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="user-avatar-mini">AS</div>
+        <div><div style="font-size:0.85rem;font-weight:600;" id="sbUserName">Alex Student</div><div style="font-size:0.72rem;color:var(--text-muted);">Student Researcher</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn-ghost" id="sidebarToggle" onclick="toggleSidebar()" style="display:none;"><i class="bi bi-list" style="font-size:1.2rem;"></i></button>
+      <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.85rem;">
+        <span style="color:var(--text-primary);font-weight:600;">Account / My Profile</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" onclick="window.location.href='notifications.html'" title="Notifications"><i class="bi bi-bell"></i><span class="notif-dot"></span></button>
+        <button class="topbar-icon-btn" onclick="window.location.href='chat.html'" title="Messages"><i class="bi bi-chat-dots"></i></button>
+        <div class="avatar avatar-sm" style="cursor:pointer;" onclick="openEditModal()">AS</div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div id="profileSuccessAlert" style="display:none;background:rgba(16,185,129,0.15);border:1px solid var(--success);color:#34d399;padding:0.875rem 1.25rem;border-radius:var(--radius-md);margin-bottom:1.5rem;align-items:center;gap:0.6rem;font-size:0.9rem;" class="animate-fade">
+        <i class="bi bi-check-circle-fill" style="font-size:1.2rem;"></i>
+        <span><strong>Success!</strong> Your profile details have been updated and saved.</span>
+      </div>
+
+      <div class="rcp-card animate-fade" style="padding:2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;background:linear-gradient(135deg,rgba(79,70,229,0.2) 0%,rgba(6,182,212,0.1) 100%);border:1px solid rgba(79,70,229,0.3);">
+        <div style="display:flex;align-items:center;gap:1.5rem;">
+          <div class="avatar avatar-xl" style="width:80px;height:80px;font-size:2rem;box-shadow:var(--shadow-md);">AS</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.3rem;">
+              <h1 style="font-size:1.75rem;font-weight:800;" id="profName">Alex Student</h1>
+              <span class="badge-custom badge-active">STUDENT RESEARCHER</span>
+            </div>
+            <div style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.6rem;" id="profDeptUnivSub">
+              Dept of Computer Science & Engineering, BUET
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;" id="profSkillsContainer">
+              <span class="chip">Python</span><span class="chip">Java</span><span class="chip">PyTorch</span><span class="chip">NLP</span><span class="chip">Machine Learning</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-primary-custom" onclick="openEditModal()" style="padding:0.75rem 1.5rem;font-size:0.9rem;">
+          <i class="bi bi-pencil-square"></i> Edit Profile
+        </button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:1.5rem;">
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+          <div class="rcp-card" style="padding:1.5rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;"><i class="bi bi-person-vcard" style="color:var(--primary-light);"></i> Contact & Info</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.875rem;">
+              <div><span style="color:var(--text-muted);">Email:</span> <strong style="color:var(--text-primary)" id="profEmail">alex@student.rcp.edu</strong></div>
+              <div><span style="color:var(--text-muted);">Department:</span> <strong style="color:var(--text-primary)" id="profDept">Computer Science & Engineering</strong></div>
+              <div><span style="color:var(--text-muted);">University:</span> <strong style="color:var(--text-primary)" id="profUniv">BUET</strong></div>
+              <div><span style="color:var(--text-muted);">Role:</span> <span class="chip">STUDENT</span></div>
+              <div><span style="color:var(--text-muted);">Joined:</span> Jan 2026</div>
+            </div>
+          </div>
+
+          <div class="rcp-card" style="padding:1.5rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;"><i class="bi bi-lightbulb" style="color:var(--secondary);"></i> Research Interests</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;" id="profInterestsContainer">
+              <span class="chip chip-cyan">Bangla NLP</span>
+              <span class="chip chip-cyan">LLM Hallucinations</span>
+              <span class="chip chip-cyan">Model Optimization</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+          <div class="rcp-card" style="padding:1.5rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;"><i class="bi bi-journal-text" style="color:var(--primary-light);"></i> Biography</h3>
+            <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;" id="profBio">
+              Undergraduate CSE researcher specializing in Bangla Large Language Models and natural language processing benchmarks. Currently working on hallucination detection algorithms and baseline model evaluations.
+            </p>
+          </div>
+
+          <div class="rcp-card" style="padding:1.5rem;">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;"><i class="bi bi-folder2-open" style="color:var(--success);"></i> Active Projects (2)</h3>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:0.875rem;">
+                <div style="font-weight:700;font-size:0.9rem;">Bangla LLM Hallucination Detection</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Role: Lead Student Researcher · Progress: 68%</div>
+                <div class="progress-custom"><div class="progress-bar-custom" style="width:68%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <h3 style="font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;"><i class="bi bi-pencil-square" style="color:var(--primary-light)"></i> Edit Profile Details</h3>
+      <button class="btn-ghost" onclick="hideModal('editProfileModal')" style="padding:0.3rem;"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <form onsubmit="saveProfileChanges(event)">
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="editName" class="form-control-custom" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="editEmail" class="form-control-custom" required />
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Department *</label>
+            <input type="text" id="editDept" class="form-control-custom" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">University *</label>
+            <input type="text" id="editUniv" class="form-control-custom" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Biography / About</label>
+          <textarea id="editBio" class="form-control-custom" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skills (comma-separated)</label>
+          <input type="text" id="editSkills" class="form-control-custom" value="Python, Java, PyTorch, NLP, Machine Learning" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Research Interests (comma-separated)</label>
+          <input type="text" id="editInterests" class="form-control-custom" value="Bangla NLP, LLM Hallucinations, Model Optimization" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" onclick="hideModal('editProfileModal')">Cancel</button>
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-lg"></i> Save Profile Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../js/auth.js?v=6.2"></script>
+<script src="../js/api.js?v=6.2"></script>
+<script>
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebarOverlay');
+    if (sb) sb.classList.toggle('open');
+    if (ov) ov.classList.toggle('active');
+  }
+  if (window.innerWidth <= 768) {
+    const btn = document.getElementById('sidebarToggle');
+    if (btn) btn.style.display = 'inline-flex';
+  }
+
+  function showModal(id) {
+    document.getElementById(id).classList.add('active');
+  }
+  function hideModal(id) {
+    document.getElementById(id).classList.remove('active');
+  }
+
+  function openEditModal() {
+    const uName = document.getElementById('profName').textContent.trim();
+    const uEmail = document.getElementById('profEmail').textContent.trim();
+    const uDept = document.getElementById('profDept').textContent.trim();
+    const uUniv = document.getElementById('profUniv').textContent.trim();
+    const uBio = document.getElementById('profBio').textContent.trim();
+
+    document.getElementById('editName').value = uName;
+    document.getElementById('editEmail').value = uEmail;
+    document.getElementById('editDept').value = uDept;
+    document.getElementById('editUniv').value = uUniv;
+    document.getElementById('editBio').value = uBio;
+
+    showModal('editProfileModal');
+  }
+
+  function saveProfileChanges(e) {
+    e.preventDefault();
+    const newName = document.getElementById('editName').value.trim();
+    const newEmail = document.getElementById('editEmail').value.trim();
+    const newDept = document.getElementById('editDept').value.trim();
+    const newUniv = document.getElementById('editUniv').value.trim();
+    const newBio = document.getElementById('editBio').value.trim();
+    const newSkills = document.getElementById('editSkills').value.trim();
+    const newInterests = document.getElementById('editInterests').value.trim();
+
+    if (!newName) {
+      alert('Please enter your full name.');
+      return;
+    }
+
+    // Update DOM elements in real-time
+    document.getElementById('profName').textContent = newName;
+    document.getElementById('profEmail').textContent = newEmail;
+    document.getElementById('profDept').textContent = newDept;
+    document.getElementById('profUniv').textContent = newUniv;
+    document.getElementById('profBio').textContent = newBio;
+    
+    const subLabel = document.getElementById('profDeptUnivSub');
+    if (subLabel) subLabel.textContent = `${newDept}, ${newUniv}`;
+
+    // Update initials & avatar text
+    const initials = newName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    document.querySelectorAll('.avatar-xl, .avatar-sm, .user-avatar-mini').forEach(el => {
+      if (!el.classList.contains('logo-icon')) el.textContent = initials;
+    });
+
+    // Update sidebar user name
+    const sbName = document.getElementById('sbUserName');
+    if (sbName) sbName.textContent = newName;
+
+    // Update skills chips if provided
+    if (newSkills) {
+      const container = document.getElementById('profSkillsContainer');
+      if (container) {
+        container.innerHTML = newSkills.split(',').map(s => `<span class="chip">${s.trim()}</span>`).join(' ');
+      }
+    }
+
+    // Update interest chips if provided
+    if (newInterests) {
+      const container = document.getElementById('profInterestsContainer');
+      if (container) {
+        container.innerHTML = newInterests.split(',').map(i => `<span class="chip chip-cyan">${i.trim()}</span>`).join(' ');
+      }
+    }
+
+    // Persist to localStorage rcp_user
+    const user = JSON.parse(localStorage.getItem('rcp_user') || '{}');
+    user.name = newName;
+    user.email = newEmail;
+    user.department = newDept;
+    user.university = newUniv;
+    user.bio = newBio;
+    localStorage.setItem('rcp_user', JSON.stringify(user));
+
+    // Show success alert banner
+    const alertBox = document.getElementById('profileSuccessAlert');
+    if (alertBox) {
+      alertBox.style.display = 'flex';
+      setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+    }
+
+    hideModal('editProfileModal');
+  }
+</script>
+</body>
+</html>
