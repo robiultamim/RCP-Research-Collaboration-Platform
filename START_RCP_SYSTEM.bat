@@ -62,12 +62,26 @@ if %ERRORLEVEL% NEQ 0 (
 echo [OK] Apache active on port 80.
 echo.
 
+:: 3.1 Auto-deploy/sync frontend to XAMPP htdocs
+echo [INFO] Syncing frontend to C:\xampp\htdocs\rcp...
+if exist "C:\xampp\htdocs" (
+    if exist "%~dp0frontend" (
+        xcopy /E /I /Y "%~dp0frontend" "C:\xampp\htdocs\rcp\" >nul 2>&1
+        echo [OK] Frontend synced to C:\xampp\htdocs\rcp.
+    ) else (
+        echo [NOTICE] Frontend folder not found in launcher directory.
+    )
+) else (
+    echo [WARNING] C:\xampp\htdocs not found! Ensure XAMPP is installed at C:\xampp.
+)
+echo.
+
 :: 4. Launch Backend JAR with detected DB URL
 echo [INFO] Starting Spring Boot Backend on port 8080...
-if exist "rcp-backend-1.0.0.jar" (
-    start "RCP Backend" java -jar rcp-backend-1.0.0.jar --spring.datasource.url="%DB_URL%"
-) else if exist "target\rcp-backend-1.0.0.jar" (
-    start "RCP Backend" java -jar target\rcp-backend-1.0.0.jar --spring.datasource.url="%DB_URL%"
+if exist "%~dp0rcp-backend-1.0.0.jar" (
+    start "RCP Backend" java -jar "%~dp0rcp-backend-1.0.0.jar" --spring.datasource.url="%DB_URL%"
+) else if exist "%~dp0target\rcp-backend-1.0.0.jar" (
+    start "RCP Backend" java -jar "%~dp0target\rcp-backend-1.0.0.jar" --spring.datasource.url="%DB_URL%"
 ) else (
     echo [ERROR] rcp-backend-1.0.0.jar not found!
     echo         Make sure you are running this from the RCP-DEPLOY folder.
