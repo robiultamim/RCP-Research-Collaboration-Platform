@@ -65,6 +65,7 @@ echo.
 :: 3.1 Auto-deploy/sync frontend to XAMPP htdocs
 echo [INFO] Syncing frontend to C:\xampp\htdocs\rcp...
 if exist "C:\xampp\htdocs" (
+    if not exist "C:\xampp\htdocs\rcp" mkdir "C:\xampp\htdocs\rcp"
     if exist "%~dp0frontend" (
         xcopy /E /I /Y "%~dp0frontend" "C:\xampp\htdocs\rcp\" >nul 2>&1
         echo [OK] Frontend synced to C:\xampp\htdocs\rcp.
