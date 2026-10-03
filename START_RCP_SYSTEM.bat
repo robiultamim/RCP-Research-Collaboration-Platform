@@ -11,8 +11,12 @@ echo.
 :: 1. Check Java
 where java >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
+    echo.
     echo [ERROR] Java is not found in PATH!
-    echo Please install JDK 17 or higher.
+    echo.
+    echo Please install Java 17 from: https://adoptium.net/
+    echo After installing, restart your PC then run this file again.
+    echo.
     pause
     exit /b 1
 )
